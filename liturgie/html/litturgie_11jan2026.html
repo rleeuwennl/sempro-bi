@@ -1,0 +1,32 @@
+<script>
+    var LITURGIE_JSON_FILE = '/liturgie/json/litturgie_11jan2026.json';
+</script>
+<script src="/assets/js/liturgie-common.js"></script>
+
+<article class="box post">
+    <header class="style1">
+        <h2></h2>
+        <p>11 Januari 10.00 uur<br>ds. Dirk Engelage</p>
+    </header>
+
+    <!-- Live Section -->
+    <section id="live-section" style="margin-top: 2em; display: none;">
+        <h3>Live Kerkdienst</h3>
+        <p>Bekijk de live uitzending van de kerkdienst op ons YouTube kanaal:</p>
+        <p style="text-align: center; margin: 2em 0;">
+            <a id="live-button" href="" target="_blank" class="button style1">
+                Open Live Stream op YouTube
+            </a>
+        </p>
+        <p><em>De live stream opent in een nieuw venster wanneer de uitzending actief is.</em></p>
+    </section>
+
+    <!-- YouTube Frame -->
+    <iframe id="youtube-frame" width="100%" height="450" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style="max-width: 100%; border-radius: 8px; display: none;"></iframe>
+
+    <!-- PDF Section -->
+    <section id="pdf-section" style="margin-top: 2em; display: none;">
+        <h3></h3>
+        <iframe id="pdf-frame" src="" width="100%" height="600px" style="border: 1px solid #ddd; border-radius: 8px;"></iframe>
+    </section>
+</article>

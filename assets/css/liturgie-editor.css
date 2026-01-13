@@ -1,0 +1,245 @@
+/* Liturgie Editor Styles */
+
+.liturgie-editor {
+    background: linear-gradient(135deg, #fff9e6 0%, #fffaf0 100%);
+    border: 2px solid #f39c12;
+    border-radius: 8px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 12px rgba(243, 156, 18, 0.2);
+    overflow: hidden;
+    animation: liturgie-editor-slide-in 0.4s ease;
+}
+
+@keyframes liturgie-editor-slide-in {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.liturgie-editor-header {
+    background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+    color: white;
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.liturgie-editor-header h4 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.liturgie-toggle {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.liturgie-toggle:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.liturgie-editor-body {
+    padding: 16px;
+}
+
+.liturgie-editor-section {
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #f0e5cc;
+}
+
+.liturgie-editor-section:last-of-type {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.liturgie-editor-section label {
+    display: block;
+    font-weight: 600;
+    font-size: 13px;
+    color: #2c3e50;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.liturgie-editor-section input[type="text"] {
+    width: 100%;
+    padding: 10px 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 4px;
+    font-size: 13px;
+    font-family: 'Courier New', monospace;
+    margin-bottom: 8px;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease;
+}
+
+.liturgie-editor-section input[type="text"]:focus {
+    outline: none;
+    border-color: #f39c12;
+    box-shadow: 0 0 0 3px rgba(243, 156, 18, 0.1);
+}
+
+.liturgie-editor-section input[type="file"] {
+    display: block;
+    width: 100%;
+    padding: 8px;
+    border: 2px dashed #e0e0e0;
+    border-radius: 4px;
+    font-size: 13px;
+    margin-bottom: 8px;
+    background: white;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+
+.liturgie-editor-section input[type="file"]:hover {
+    border-color: #f39c12;
+    background: #fffaf0;
+}
+
+.liturgie-btn {
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
+}
+
+.liturgie-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.4);
+    background: linear-gradient(135deg, #2980b9 0%, #21618c 100%);
+}
+
+.liturgie-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(52, 152, 219, 0.3);
+}
+
+.liturgie-file-btn {
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    color: white !important;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
+    white-space: nowrap;
+}
+
+.liturgie-file-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.4);
+    background: linear-gradient(135deg, #2980b9 0%, #21618c 100%);
+}
+
+.liturgie-file-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(52, 152, 219, 0.3);
+}
+
+.liturgie-status {
+    display: none;
+    padding: 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 12px;
+    animation: liturgie-status-fade-in 0.3s ease;
+}
+
+@keyframes liturgie-status-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.liturgie-status-success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.liturgie-status-error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.liturgie-status-info {
+    background: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+
+/* Responsive Design */
+@media (max-width: 500px) {
+    .liturgie-editor {
+        margin-left: -10px;
+        margin-right: -10px;
+        border-radius: 0;
+    }
+
+    .liturgie-editor-header h4 {
+        font-size: 14px;
+    }
+
+    .liturgie-editor-section input[type="text"] {
+        font-size: 12px;
+    }
+
+    .liturgie-btn {
+        width: 100%;
+        padding: 12px;
+    }
+}

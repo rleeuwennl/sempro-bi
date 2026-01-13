@@ -1,0 +1,284 @@
+/* PGAD Authentication Modal Styles */
+
+/* Modal Container */
+.pgad-login-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.pgad-login-modal.pgad-active {
+    display: flex;
+    opacity: 1;
+}
+
+/* Modal Content Container */
+.pgad-login-container {
+    background: linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%);
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    padding: 0;
+    width: 90%;
+    max-width: 420px;
+    animation: pgad-modal-enter 0.4s ease;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+@keyframes pgad-modal-enter {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Modal Header */
+.pgad-login-header {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    color: white;
+    padding: 30px 24px;
+    text-align: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.pgad-login-header h2 {
+    margin: 0 0 8px 0;
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.pgad-login-header p {
+    margin: 0;
+    font-size: 14px;
+    opacity: 0.9;
+    font-weight: 300;
+    letter-spacing: 0.3px;
+}
+
+/* Form */
+#pgad-login-form {
+    padding: 30px 24px;
+}
+
+.pgad-form-group {
+    margin-bottom: 20px;
+}
+
+.pgad-form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #2c3e50;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.pgad-form-group input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: inherit;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+    background-color: #f8f8f8;
+}
+
+.pgad-form-group input:focus {
+    outline: none;
+    border-color: #34495e;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(52, 73, 94, 0.1);
+}
+
+.pgad-form-group input::placeholder {
+    color: #999;
+}
+
+/* Error Message */
+.pgad-login-error {
+    color: #e74c3c;
+    font-size: 13px;
+    padding: 10px 12px;
+    background-color: #fadbd8;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    display: none;
+    border-left: 4px solid #e74c3c;
+}
+
+/* Form Actions */
+.pgad-form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.pgad-form-actions button {
+    flex: 1;
+    padding: 12px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pgad-btn-login {
+    background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+}
+
+.pgad-btn-login:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(39, 174, 96, 0.4);
+    background: linear-gradient(135deg, #229954 0%, #1e8449 100%);
+}
+
+.pgad-btn-login:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(39, 174, 96, 0.3);
+}
+
+.pgad-btn-cancel {
+    background: #ecf0f1;
+    color: #2c3e50;
+    border: 1px solid #bdc3c7;
+}
+
+.pgad-btn-cancel:hover {
+    background: #d5dbdb;
+    border-color: #95a5a6;
+}
+
+.pgad-btn-cancel:active {
+    background: #c0c8c8;
+}
+
+/* Authorization Badge */
+.pgad-auth-badge {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+    color: white;
+    padding: 12px 18px;
+    border-radius: 8px;
+    z-index: 9999;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: pgad-badge-enter 0.4s ease;
+}
+
+@keyframes pgad-badge-enter {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.pgad-badge-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background-color: #f1c40f;
+    border-radius: 50%;
+    animation: pgad-pulse 2s infinite;
+    box-shadow: 0 0 8px rgba(241, 196, 15, 0.6);
+}
+
+@keyframes pgad-pulse {
+    0%, 100% {
+        box-shadow: 0 0 8px rgba(241, 196, 15, 0.6);
+    }
+    50% {
+        box-shadow: 0 0 15px rgba(241, 196, 15, 0.9);
+    }
+}
+
+.pgad-logout-btn {
+    margin-left: 12px;
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pgad-logout-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
+/* Responsive Design */
+@media (max-width: 500px) {
+    .pgad-login-container {
+        width: 95%;
+        border-radius: 8px;
+    }
+
+    .pgad-login-header {
+        padding: 24px 20px;
+    }
+
+    .pgad-login-header h2 {
+        font-size: 24px;
+    }
+
+    #pgad-login-form {
+        padding: 24px 20px;
+    }
+
+    .pgad-auth-badge {
+        top: 10px;
+        right: 10px;
+        padding: 10px 14px;
+        font-size: 12px;
+    }
+
+    .pgad-logout-btn {
+        padding: 4px 8px;
+        font-size: 10px;
+    }
+}
