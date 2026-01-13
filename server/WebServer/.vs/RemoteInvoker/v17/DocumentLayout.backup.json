@@ -1,0 +1,292 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Projects\\PPE\\ppe\\RemoteInvoker\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{B4CDA6BB-DAF4-4DB8-AF9A-02D52E72A83D}|RemoteInvoker.csproj|c:\\projects\\ppe\\ppe\\remoteinvoker\\ppewebservicecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4CDA6BB-DAF4-4DB8-AF9A-02D52E72A83D}|RemoteInvoker.csproj|solutionrelative:ppewebservicecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{00000000-0000-0000-0000-000000000000}|\u003CSolution\u003E|RemoteInvoker||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B4CDA6BB-DAF4-4DB8-AF9A-02D52E72A83D}|RemoteInvoker.csproj|C:\\Projects\\PPE\\ppe\\RemoteInvoker\\main.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B4CDA6BB-DAF4-4DB8-AF9A-02D52E72A83D}|RemoteInvoker.csproj|solutionrelative:main.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B4CDA6BB-DAF4-4DB8-AF9A-02D52E72A83D}|RemoteInvoker.csproj|C:\\Projects\\PPE\\ppe\\RemoteInvoker\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4CDA6BB-DAF4-4DB8-AF9A-02D52E72A83D}|RemoteInvoker.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B4CDA6BB-DAF4-4DB8-AF9A-02D52E72A83D}|RemoteInvoker.csproj|C:\\Projects\\PPE\\ppe\\RemoteInvoker\\viewinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4CDA6BB-DAF4-4DB8-AF9A-02D52E72A83D}|RemoteInvoker.csproj|solutionrelative:viewinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B4CDA6BB-DAF4-4DB8-AF9A-02D52E72A83D}|RemoteInvoker.csproj|C:\\Projects\\PPE\\ppe\\RemoteInvoker\\pst3generator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4CDA6BB-DAF4-4DB8-AF9A-02D52E72A83D}|RemoteInvoker.csproj|solutionrelative:pst3generator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B4CDA6BB-DAF4-4DB8-AF9A-02D52E72A83D}|RemoteInvoker.csproj|C:\\Projects\\PPE\\ppe\\RemoteInvoker\\checkroutemanagerlicenses.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4CDA6BB-DAF4-4DB8-AF9A-02D52E72A83D}|RemoteInvoker.csproj|solutionrelative:checkroutemanagerlicenses.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B4CDA6BB-DAF4-4DB8-AF9A-02D52E72A83D}|RemoteInvoker.csproj|C:\\Projects\\PPE\\ppe\\RemoteInvoker\\properties\\resources.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4CDA6BB-DAF4-4DB8-AF9A-02D52E72A83D}|RemoteInvoker.csproj|solutionrelative:properties\\resources.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B4CDA6BB-DAF4-4DB8-AF9A-02D52E72A83D}|RemoteInvoker.csproj|C:\\Projects\\PPE\\ppe\\RemoteInvoker\\info.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B4CDA6BB-DAF4-4DB8-AF9A-02D52E72A83D}|RemoteInvoker.csproj|solutionrelative:info.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B4CDA6BB-DAF4-4DB8-AF9A-02D52E72A83D}|RemoteInvoker.csproj|C:\\Projects\\PPE\\ppe\\RemoteInvoker\\schematics.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4CDA6BB-DAF4-4DB8-AF9A-02D52E72A83D}|RemoteInvoker.csproj|solutionrelative:schematics.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B4CDA6BB-DAF4-4DB8-AF9A-02D52E72A83D}|RemoteInvoker.csproj|C:\\Projects\\PPE\\ppe\\RemoteInvoker\\ppewebpage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4CDA6BB-DAF4-4DB8-AF9A-02D52E72A83D}|RemoteInvoker.csproj|solutionrelative:ppewebpage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B4CDA6BB-DAF4-4DB8-AF9A-02D52E72A83D}|RemoteInvoker.csproj|C:\\Projects\\PPE\\ppe\\RemoteInvoker\\sapinterface.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4CDA6BB-DAF4-4DB8-AF9A-02D52E72A83D}|RemoteInvoker.csproj|solutionrelative:sapinterface.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B4CDA6BB-DAF4-4DB8-AF9A-02D52E72A83D}|RemoteInvoker.csproj|C:\\Projects\\PPE\\ppe\\RemoteInvoker\\ascs.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{B4CDA6BB-DAF4-4DB8-AF9A-02D52E72A83D}|RemoteInvoker.csproj|solutionrelative:ascs.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B4CDA6BB-DAF4-4DB8-AF9A-02D52E72A83D}|RemoteInvoker.csproj|C:\\Projects\\PPE\\ppe\\RemoteInvoker\\generatehtmlpages.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4CDA6BB-DAF4-4DB8-AF9A-02D52E72A83D}|RemoteInvoker.csproj|solutionrelative:generatehtmlpages.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B4CDA6BB-DAF4-4DB8-AF9A-02D52E72A83D}|RemoteInvoker.csproj|C:\\Projects\\PPE\\ppe\\RemoteInvoker\\maillogger.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B4CDA6BB-DAF4-4DB8-AF9A-02D52E72A83D}|RemoteInvoker.csproj|solutionrelative:maillogger.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B4CDA6BB-DAF4-4DB8-AF9A-02D52E72A83D}|RemoteInvoker.csproj|c:\\projects\\ppe\\ppe\\remoteinvoker\\||{B270807C-D8C6-49EB-8EBE-8E8D566637A1}|cc4014f5-b18d-439c-9352-f99d984cca85"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 6,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{13b12e3e-c1b4-4539-9371-4fe9a0d523fc}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "ascs.html",
+              "DocumentMoniker": "C:\\Projects\\PPE\\ppe\\RemoteInvoker\\ascs.html",
+              "RelativeDocumentMoniker": "ascs.html",
+              "ToolTip": "C:\\Projects\\PPE\\ppe\\RemoteInvoker\\ascs.html",
+              "RelativeToolTip": "ascs.html",
+              "ViewState": "AgIAAAEBAAAAAAAAAAAIwBQBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2024-11-05T16:10:13.394Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "main.html",
+              "DocumentMoniker": "C:\\Projects\\PPE\\ppe\\RemoteInvoker\\main.html",
+              "RelativeDocumentMoniker": "main.html",
+              "ToolTip": "C:\\Projects\\PPE\\ppe\\RemoteInvoker\\main.html",
+              "RelativeToolTip": "main.html",
+              "ViewState": "AgIAAGgAAAAAAAAAAAAmwHsAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2024-11-05T16:09:59.06Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "PpeWebServiceController.cs",
+              "DocumentMoniker": "C:\\Projects\\PPE\\ppe\\RemoteInvoker\\PpeWebServiceController.cs",
+              "RelativeDocumentMoniker": "PpeWebServiceController.cs",
+              "ToolTip": "C:\\Projects\\PPE\\ppe\\RemoteInvoker\\PpeWebServiceController.cs",
+              "RelativeToolTip": "PpeWebServiceController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-05T07:46:30.076Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Schematics.cs",
+              "DocumentMoniker": "C:\\Projects\\PPE\\ppe\\RemoteInvoker\\Schematics.cs",
+              "RelativeDocumentMoniker": "Schematics.cs",
+              "ToolTip": "C:\\Projects\\PPE\\ppe\\RemoteInvoker\\Schematics.cs",
+              "RelativeToolTip": "Schematics.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAuwB8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-05T16:19:50.637Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "GenerateHtmlPages.cs",
+              "DocumentMoniker": "C:\\Projects\\PPE\\ppe\\RemoteInvoker\\GenerateHtmlPages.cs",
+              "RelativeDocumentMoniker": "GenerateHtmlPages.cs",
+              "ToolTip": "C:\\Projects\\PPE\\ppe\\RemoteInvoker\\GenerateHtmlPages.cs",
+              "RelativeToolTip": "GenerateHtmlPages.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-05T16:05:27.061Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "PpeWebPage.cs",
+              "DocumentMoniker": "C:\\Projects\\PPE\\ppe\\RemoteInvoker\\PpeWebPage.cs",
+              "RelativeDocumentMoniker": "PpeWebPage.cs",
+              "ToolTip": "C:\\Projects\\PPE\\ppe\\RemoteInvoker\\PpeWebPage.cs",
+              "RelativeToolTip": "PpeWebPage.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-05T13:48:09.917Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "RemoteInvoker",
+              "DocumentMoniker": "C:\\Projects\\PPE\\ppe\\RemoteInvoker\\RemoteInvoker.csproj",
+              "RelativeDocumentMoniker": "RemoteInvoker.csproj",
+              "ToolTip": "C:\\Projects\\PPE\\ppe\\RemoteInvoker\\RemoteInvoker.csproj*",
+              "RelativeToolTip": "RemoteInvoker.csproj*",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2024-11-05T13:37:40.57Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Projects\\PPE\\ppe\\RemoteInvoker\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Projects\\PPE\\ppe\\RemoteInvoker\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAABAAAAAAAAAAAAAAACkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-11T12:47:06.814Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ViewInfo.cs",
+              "DocumentMoniker": "C:\\Projects\\PPE\\ppe\\RemoteInvoker\\ViewInfo.cs",
+              "RelativeDocumentMoniker": "ViewInfo.cs",
+              "ToolTip": "C:\\Projects\\PPE\\ppe\\RemoteInvoker\\ViewInfo.cs",
+              "RelativeToolTip": "ViewInfo.cs",
+              "ViewState": "AgIAACYAAAAAAAAAAADgvzwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-05T08:18:55.689Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "info.html",
+              "DocumentMoniker": "C:\\Projects\\PPE\\ppe\\RemoteInvoker\\info.html",
+              "RelativeDocumentMoniker": "info.html",
+              "ToolTip": "C:\\Projects\\PPE\\ppe\\RemoteInvoker\\info.html",
+              "RelativeToolTip": "info.html",
+              "ViewState": "AgIAACQAAAAAAAAAAAAAADoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2024-11-05T08:54:17.698Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Resources.Designer.cs",
+              "DocumentMoniker": "C:\\Projects\\PPE\\ppe\\RemoteInvoker\\Properties\\Resources.Designer.cs",
+              "RelativeDocumentMoniker": "Properties\\Resources.Designer.cs",
+              "ToolTip": "C:\\Projects\\PPE\\ppe\\RemoteInvoker\\Properties\\Resources.Designer.cs",
+              "RelativeToolTip": "Properties\\Resources.Designer.cs",
+              "ViewState": "AgIAAGUAAAAAAAAAAAAMwHkAAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-06T09:26:04.218Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "SapInterface.cs",
+              "DocumentMoniker": "C:\\Projects\\PPE\\ppe\\RemoteInvoker\\SapInterface.cs",
+              "RelativeDocumentMoniker": "SapInterface.cs",
+              "ToolTip": "C:\\Projects\\PPE\\ppe\\RemoteInvoker\\SapInterface.cs",
+              "RelativeToolTip": "SapInterface.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-05T13:01:34.166Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "MailLogger.cs",
+              "DocumentMoniker": "C:\\Projects\\PPE\\ppe\\RemoteInvoker\\MailLogger.cs",
+              "RelativeDocumentMoniker": "MailLogger.cs",
+              "ToolTip": "C:\\Projects\\PPE\\ppe\\RemoteInvoker\\MailLogger.cs",
+              "RelativeToolTip": "MailLogger.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAA0AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-05T12:57:26.548Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "CheckRouteManagerLicenses.cs",
+              "DocumentMoniker": "C:\\Projects\\PPE\\ppe\\RemoteInvoker\\CheckRouteManagerLicenses.cs",
+              "RelativeDocumentMoniker": "CheckRouteManagerLicenses.cs",
+              "ToolTip": "C:\\Projects\\PPE\\ppe\\RemoteInvoker\\CheckRouteManagerLicenses.cs",
+              "RelativeToolTip": "CheckRouteManagerLicenses.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAuwA4AAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-05T07:43:47.909Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Pst3Generator.cs",
+              "DocumentMoniker": "C:\\Projects\\PPE\\ppe\\RemoteInvoker\\Pst3Generator.cs",
+              "RelativeDocumentMoniker": "Pst3Generator.cs",
+              "ToolTip": "C:\\Projects\\PPE\\ppe\\RemoteInvoker\\Pst3Generator.cs",
+              "RelativeToolTip": "Pst3Generator.cs",
+              "ViewState": "AgIAABUAAAAAAAAAAAAhwEYAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-05T07:40:37.351Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
