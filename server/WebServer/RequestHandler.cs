@@ -79,6 +79,79 @@ public class RequestHandler : DelegatingHandler
         return response;
     }
 
+    private Task<HttpResponseMessage> GetModifiedImage(string file)
+    {
+        file = @"c:/sempro-bi" + file;
+
+        if (!System.IO.File.Exists(file))
+        {
+            return Task.FromResult<HttpResponseMessage>(null);
+        }
+
+        try
+        {
+            // Load the original image
+            using (var originalImage = System.Drawing.Image.FromFile(file))
+            {
+                // Create a new bitmap with the same dimensions
+                using (var bitmap = new System.Drawing.Bitmap(originalImage.Width, originalImage.Height))
+                {
+                    using (var graphics = System.Drawing.Graphics.FromImage(bitmap))
+                    {
+                        // Set high quality rendering
+                        graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                        graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+
+                        // Draw the original image
+                        graphics.DrawImage(originalImage, 0, 0, originalImage.Width, originalImage.Height);
+
+                        // Add text overlay
+                        string overlayText = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                        using (var font = new System.Drawing.Font("Arial", 24, System.Drawing.FontStyle.Bold))
+                        using (var brush = new System.Drawing.SolidBrush(System.Drawing.Color.White))
+                        using (var shadowBrush = new System.Drawing.SolidBrush(System.Drawing.Color.FromArgb(128, 0, 0, 0)))
+                        {
+                            // Measure text size
+                            var textSize = graphics.MeasureString(overlayText, font);
+                            float x = 10;
+                            float y = 10;
+
+                            // Draw shadow
+                            graphics.DrawString(overlayText, font, shadowBrush, x + 2, y + 12);
+                            // Draw text
+                            graphics.DrawString(overlayText, font, brush, x, y+12);
+                        }
+
+                        // Draw a rectangle border
+                        using (var pen = new System.Drawing.Pen(System.Drawing.Color.Red, 5))
+                        {
+                           // graphics.DrawRectangle(pen, 5, 5, bitmap.Width - 10, bitmap.Height - 10);
+                        }
+                    }
+
+                    // Save to memory stream
+                    using (var ms = new MemoryStream())
+                    {
+                        bitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                        byte[] buffer = ms.ToArray();
+
+                        HttpResponseMessage response = new HttpResponseMessage();
+                        response.Content = new ByteArrayContent(buffer);
+                        response.Content.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
+                        response.StatusCode = HttpStatusCode.OK;
+                        response.Content.Headers.ContentLength = buffer.Length;
+                        return Task.FromResult(response);
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Image modification error: {ex.Message}");
+            return Task.FromResult<HttpResponseMessage>(null);
+        }
+    }
+
     private Task<HttpResponseMessage> RemovePdf(HttpRequestMessage request)
     {
         if (!IsAuthorized(request))
@@ -342,28 +415,12 @@ public class RequestHandler : DelegatingHandler
             }
 
             // Handle image endpoint
-            if (line == "/api/image/pic01")
+            if (line == "/api/retrieve/graph")
             {
-                return GetFile("/images/pic01.jpg", "image/jpeg");
+                return GetModifiedImage("/images/pic01.jpg");
             }
 
-            // Update YouTube insluit code in liturgie JSON file
-            if (line == "/api/liturgie/update-insluit" && request.Method == HttpMethod.Post)
-            {
-                return UpdateYoutubeInsluit(request);
-            }
-
-            // Upload PDF for liturgie
-            if (line == "/api/liturgie/upload-pdf" && request.Method == HttpMethod.Post)
-            {
-                return UploadPdf(request);
-            }
-
-            if (line == "/api/liturgie/remove-pdf" && request.Method == HttpMethod.Post)
-            {
-                return RemovePdf(request);
-
-            }
+         
 
             // For authorized requests, add to console output
             if (IsAuthorized(request))

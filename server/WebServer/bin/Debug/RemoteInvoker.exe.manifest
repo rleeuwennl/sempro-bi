@@ -90,14 +90,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="RemoteInvoker.exe" size="24576">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="RemoteInvoker.exe" size="25600">
       <assemblyIdentity name="RemoteInvoker" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>f0WmP2WRf009yuMLX4lfP0TwF6rR9PtwT5leJKk57Fw=</dsig:DigestValue>
+        <dsig:DigestValue>F681Rwmo1lL2X3NhveL6un7zkCYqbQLiwQB84217xz8=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
