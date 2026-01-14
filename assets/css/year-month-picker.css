@@ -282,3 +282,52 @@ input[type="checkbox"].indeterminate {
         padding: 10px 12px;
     }
 }
+
+/* Hour Type Picker Styles */
+.hour-type-picker {
+    background: #ffffff;
+    border: 1px solid #d4d4d4;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+    margin-top: 1rem;
+}
+
+.hour-type-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    cursor: pointer;
+    user-select: none;
+    background: #ffffff;
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.hour-type-item:last-child {
+    border-bottom: none;
+}
+
+.hour-type-item:hover {
+    background: #f5f5f5;
+}
+
+.hour-type-checkbox {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    cursor: pointer;
+    accent-color: #0078d4;
+    display: inline-block;
+    appearance: auto !important;
+    -webkit-appearance: checkbox !important;
+    -moz-appearance: checkbox !important;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.hour-type-label {
+    font-size: 13px;
+    color: #333;
+}
+
