@@ -3,3 +3,5 @@
 ################################################################################
 
 /.vs
+server/WebServer/bin/*
+server/WebServer/bin/Debug/RemoteInvoker.application

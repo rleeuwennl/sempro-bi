@@ -58,7 +58,7 @@ public class RequestHandler : DelegatingHandler
     private async Task<HttpResponseMessage> GetFile(string file, string mime)
     {
 
-        file = @"c:/pgad" + file;
+        file = @"c:/sempro-bi" + file;
 
         if (!System.IO.File.Exists(file))
         {
@@ -95,7 +95,7 @@ public class RequestHandler : DelegatingHandler
             if (!string.IsNullOrEmpty(filename))
             {
                 var jsonFilename = filename.Replace(".html", ".json");
-                var jsonPath = @"c:/pgad/liturgie/json/" + jsonFilename;
+                var jsonPath = @"c:/sempro-bi/liturgie/json/" + jsonFilename;
 
                 if (File.Exists(jsonPath))
                 {
@@ -106,7 +106,7 @@ public class RequestHandler : DelegatingHandler
                     // Remove the PDF file if it exists
                     if (!string.IsNullOrEmpty(currentPdfPath))
                     {
-                        var pdfFileToDelete = @"c:/pgad" + currentPdfPath;
+                        var pdfFileToDelete = @"c:/sempro-bi" + currentPdfPath;
                         if (File.Exists(pdfFileToDelete))
                         {
                             File.Delete(pdfFileToDelete);
@@ -166,12 +166,12 @@ public class RequestHandler : DelegatingHandler
             if (!string.IsNullOrEmpty(filename) && fileData != null)
             {
                 // Save PDF file
-                Directory.CreateDirectory(@"c:/pgad/liturgie/pdf");
-                File.WriteAllBytes(@"c:/pgad/liturgie/pdf/" + pdfFilename, fileData);
+                Directory.CreateDirectory(@"c:/sempro-bi/liturgie/pdf");
+                File.WriteAllBytes(@"c:/sempro-bi/liturgie/pdf/" + pdfFilename, fileData);
 
                 // Update JSON file to reference the PDF
                 var jsonFilename = filename.Replace(".html", ".json");
-                var jsonPath = @"c:/pgad/liturgie/json/" + jsonFilename;
+                var jsonPath = @"c:/sempro-bi/liturgie/json/" + jsonFilename;
 
                 if (File.Exists(jsonPath))
                 {
@@ -217,7 +217,7 @@ public class RequestHandler : DelegatingHandler
             {
                 // Extract base filename without .html extension
                 var jsonFilename = filename.Replace(".html", ".json");
-                var jsonPath = @"c:/pgad/liturgie/json/" + jsonFilename;
+                var jsonPath = @"c:/sempro-bi/liturgie/json/" + jsonFilename;
 
                 if (File.Exists(jsonPath))
                 {
@@ -370,6 +370,11 @@ public class RequestHandler : DelegatingHandler
             if (line == "/")
             {
                 return HandleRootIndex(request);
+            }
+
+            if(line.StartsWith("/.well-known/acme-challenge"))
+            {
+                return GetFile(line, "text/plain");
             }
 
             // All .html requests: serve the fragment only when explicitly asked; otherwise serve shell

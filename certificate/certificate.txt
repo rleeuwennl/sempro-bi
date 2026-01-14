@@ -3,7 +3,8 @@ The pgad.dsea.nl certificate is located at https://encryptssl.com/dashboard
 
 rem C:\pgad>py -3 -m http.server 8
 rem https://encryptssl.com/   certificate for pgad.dsea.nl
-openssl pkcs12 -export out pgad.dsea.nl.pfx -inkey pgad.dsea.nl.key -in pgad.dsea.nl.crt
+via mingw bash:
+openssl pkcs12 -export -out pgad.dsea.nl.pfx -inkey pgad.dsea.nl.key -in pgad.dsea.nl.crt
 
 
 PFX password Anneloes123!
