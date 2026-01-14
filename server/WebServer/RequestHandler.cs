@@ -79,242 +79,8 @@ public class RequestHandler : DelegatingHandler
         return response;
     }
 
-    private Task<HttpResponseMessage> GetModifiedImage(string file)
-    {
-        file = @"c:/sempro-bi" + file;
+   
 
-        if (!System.IO.File.Exists(file))
-        {
-            return Task.FromResult<HttpResponseMessage>(null);
-        }
-
-        try
-        {
-            // Load the original image
-            using (var originalImage = System.Drawing.Image.FromFile(file))
-            {
-                // Create a new bitmap with the same dimensions
-                using (var bitmap = new System.Drawing.Bitmap(originalImage.Width, originalImage.Height))
-                {
-                    using (var graphics = System.Drawing.Graphics.FromImage(bitmap))
-                    {
-                        // Set high quality rendering
-                        graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                        graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-
-                        // Draw the original image
-                        graphics.DrawImage(originalImage, 0, 0, originalImage.Width, originalImage.Height);
-
-                        // Add text overlay
-                        string overlayText = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                        using (var font = new System.Drawing.Font("Arial", 24, System.Drawing.FontStyle.Bold))
-                        using (var brush = new System.Drawing.SolidBrush(System.Drawing.Color.White))
-                        using (var shadowBrush = new System.Drawing.SolidBrush(System.Drawing.Color.FromArgb(128, 0, 0, 0)))
-                        {
-                            // Measure text size
-                            var textSize = graphics.MeasureString(overlayText, font);
-                            float x = 10;
-                            float y = 10;
-
-                            // Draw shadow
-                            graphics.DrawString(overlayText, font, shadowBrush, x + 2, y + 12);
-                            // Draw text
-                            graphics.DrawString(overlayText, font, brush, x, y+12);
-                        }
-
-                        // Draw a rectangle border
-                        using (var pen = new System.Drawing.Pen(System.Drawing.Color.Red, 5))
-                        {
-                           // graphics.DrawRectangle(pen, 5, 5, bitmap.Width - 10, bitmap.Height - 10);
-                        }
-                    }
-
-                    // Save to memory stream
-                    using (var ms = new MemoryStream())
-                    {
-                        bitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-                        byte[] buffer = ms.ToArray();
-
-                        HttpResponseMessage response = new HttpResponseMessage();
-                        response.Content = new ByteArrayContent(buffer);
-                        response.Content.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
-                        response.StatusCode = HttpStatusCode.OK;
-                        response.Content.Headers.ContentLength = buffer.Length;
-                        return Task.FromResult(response);
-                    }
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Image modification error: {ex.Message}");
-            return Task.FromResult<HttpResponseMessage>(null);
-        }
-    }
-
-    private Task<HttpResponseMessage> RemovePdf(HttpRequestMessage request)
-    {
-        if (!IsAuthorized(request))
-        {
-            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.Unauthorized));
-        }
-
-        try
-        {
-            var json = request.Content.ReadAsStringAsync().Result;
-            var jsonObj = JObject.Parse(json);
-            var filename = jsonObj["filename"]?.ToString();
-
-            if (!string.IsNullOrEmpty(filename))
-            {
-                var jsonFilename = filename.Replace(".html", ".json");
-                var jsonPath = @"c:/sempro-bi/liturgie/json/" + jsonFilename;
-
-                if (File.Exists(jsonPath))
-                {
-                    var jsonContent = File.ReadAllText(jsonPath);
-                    var jsonData = JObject.Parse(jsonContent);
-                    var currentPdfPath = jsonData["pdfFile"]?.ToString();
-
-                    // Remove the PDF file if it exists
-                    if (!string.IsNullOrEmpty(currentPdfPath))
-                    {
-                        var pdfFileToDelete = @"c:/sempro-bi" + currentPdfPath;
-                        if (File.Exists(pdfFileToDelete))
-                        {
-                            File.Delete(pdfFileToDelete);
-                            Console.WriteLine("Deleted PDF file: " + pdfFileToDelete);
-                        }
-                    }
-
-                    // Clear the pdfFile property in JSON
-                    jsonData["pdfFile"] = "";
-                    File.WriteAllText(jsonPath, jsonData.ToString(Newtonsoft.Json.Formatting.Indented));
-                    Console.WriteLine("Removed PDF reference for " + filename);
-
-                    var response = new HttpResponseMessage();
-                    response.Content = new StringContent("{\"success\":true}");
-                    response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-                    return Task.FromResult(response);
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("PDF removal error: " + ex.Message);
-        }
-        return Task.FromResult(new HttpResponseMessage(HttpStatusCode.BadRequest));
-    }
-
-    private Task<HttpResponseMessage> UploadPdf(HttpRequestMessage request)
-    {
-        if (!IsAuthorized(request))
-        {
-            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.Unauthorized));
-        }
-
-        try
-        {
-            var provider = new System.Net.Http.MultipartMemoryStreamProvider();
-            request.Content.ReadAsMultipartAsync(provider).Wait();
-
-            string filename = "";
-            string pdfFilename = "";
-            byte[] fileData = null;
-
-            foreach (var content in provider.Contents)
-            {
-                var name = content.Headers.ContentDisposition.Name.Trim('\"');
-                if (name == "filename")
-                {
-                    filename = content.ReadAsStringAsync().Result;
-                }
-                else if (name == "pdfFile")
-                {
-                    pdfFilename = content.Headers.ContentDisposition.FileName.Trim('\"');
-                    fileData = content.ReadAsByteArrayAsync().Result;
-                }
-            }
-
-            if (!string.IsNullOrEmpty(filename) && fileData != null)
-            {
-                // Save PDF file
-                Directory.CreateDirectory(@"c:/sempro-bi/liturgie/pdf");
-                File.WriteAllBytes(@"c:/sempro-bi/liturgie/pdf/" + pdfFilename, fileData);
-
-                // Update JSON file to reference the PDF
-                var jsonFilename = filename.Replace(".html", ".json");
-                var jsonPath = @"c:/sempro-bi/liturgie/json/" + jsonFilename;
-
-                if (File.Exists(jsonPath))
-                {
-                    var jsonContent = File.ReadAllText(jsonPath);
-                    var jsonData = JObject.Parse(jsonContent);
-
-                    jsonData["pdfFile"] = "/liturgie/pdf/" + pdfFilename;
-
-                    File.WriteAllText(jsonPath, jsonData.ToString(Newtonsoft.Json.Formatting.Indented));
-                }
-
-                Console.WriteLine("Uploaded PDF: " + pdfFilename + " for " + filename);
-
-                var response = new HttpResponseMessage();
-                response.Content = new StringContent("{\"success\":true,\"pdfFilename\":\"" + pdfFilename + "\"}");
-                response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-                return Task.FromResult(response);
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("PDF upload error: " + ex.Message);
-        }
-        return Task.FromResult(new HttpResponseMessage(HttpStatusCode.BadRequest));
-    }
-
-    private Task<HttpResponseMessage> UpdateYoutubeInsluit(HttpRequestMessage request)
-    {
-        if (!IsAuthorized(request))
-        {
-            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.Unauthorized));
-        }
-
-        try
-        {
-            var json = request.Content.ReadAsStringAsync().Result;
-            var jsonObj = JObject.Parse(json);
-
-            var filename = jsonObj["filename"]?.ToString();
-            var youtubeInsluit = jsonObj["youtubeInsluit"]?.ToString();
-
-            if (!string.IsNullOrEmpty(filename))
-            {
-                // Extract base filename without .html extension
-                var jsonFilename = filename.Replace(".html", ".json");
-                var jsonPath = @"c:/sempro-bi/liturgie/json/" + jsonFilename;
-
-                if (File.Exists(jsonPath))
-                {
-                    var jsonContent = File.ReadAllText(jsonPath);
-                    var jsonData = JObject.Parse(jsonContent);
-
-                    jsonData["youtubeInsluit"] = youtubeInsluit;
-
-                    File.WriteAllText(jsonPath, jsonData.ToString(Newtonsoft.Json.Formatting.Indented));
-                    Console.WriteLine("Updated YouTube Insluit in: " + jsonFilename);
-
-                    var response = new HttpResponseMessage();
-                    response.Content = new StringContent("{\"success\":true}");
-                    response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-                    return Task.FromResult(response);
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Insluit update error: " + ex.Message);
-        }
-        return Task.FromResult(new HttpResponseMessage(HttpStatusCode.BadRequest));
-    }
 
     protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
@@ -395,6 +161,78 @@ public class RequestHandler : DelegatingHandler
         return Task.FromResult(new HttpResponseMessage(HttpStatusCode.Unauthorized));
     }
 
+    private Task<HttpResponseMessage> RetrieveGraph(string file)
+    {
+        file = @"c:/sempro-bi" + file;
+
+        if (!System.IO.File.Exists(file))
+        {
+            return Task.FromResult<HttpResponseMessage>(null);
+        }
+
+        try
+        {
+            // Load the original image
+            using (var originalImage = System.Drawing.Image.FromFile(file))
+            {
+                // Create a new bitmap with the same dimensions
+                using (var bitmap = new System.Drawing.Bitmap(originalImage.Width, originalImage.Height))
+                {
+                    using (var graphics = System.Drawing.Graphics.FromImage(bitmap))
+                    {
+                        // Set high quality rendering
+                        graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                        graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+
+                        // Draw the original image
+                        graphics.DrawImage(originalImage, 0, 0, originalImage.Width, originalImage.Height);
+
+                        // Add text overlay
+                        string overlayText = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                        using (var font = new System.Drawing.Font("Arial", 24, System.Drawing.FontStyle.Bold))
+                        //using (var brush = new System.Drawing.SolidBrush(System.Drawing.Color.White))
+                        using (var shadowBrush = new System.Drawing.SolidBrush(System.Drawing.Color.FromArgb(128, 0, 0, 0)))
+                        {
+                            // Measure text size
+                            var textSize = graphics.MeasureString(overlayText, font);
+                            float x = 10;
+                            float y = 10;
+
+                            // Draw shadow
+                            graphics.DrawString(overlayText, font, shadowBrush, x + 2, y + 12);
+                            // Draw text
+                            //graphics.DrawString(overlayText, font, brush, x, y + 14);
+                        }
+
+                        // Draw a rectangle border
+                        using (var pen = new System.Drawing.Pen(System.Drawing.Color.Red, 5))
+                        {
+                            // graphics.DrawRectangle(pen, 5, 5, bitmap.Width - 10, bitmap.Height - 10);
+                        }
+                    }
+
+                    // Save to memory stream
+                    using (var ms = new MemoryStream())
+                    {
+                        bitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                        byte[] buffer = ms.ToArray();
+
+                        HttpResponseMessage response = new HttpResponseMessage();
+                        response.Content = new ByteArrayContent(buffer);
+                        response.Content.Headers.ContentType = new MediaTypeHeaderValue("image/jpeg");
+                        response.StatusCode = HttpStatusCode.OK;
+                        response.Content.Headers.ContentLength = buffer.Length;
+                        return Task.FromResult(response);
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Image modification error: {ex.Message}");
+            return Task.FromResult<HttpResponseMessage>(null);
+        }
+    }
     private Task<HttpResponseMessage> ProcessRequest(HttpRequestMessage request)
     {
         try
@@ -417,7 +255,7 @@ public class RequestHandler : DelegatingHandler
             // Handle image endpoint
             if (line == "/api/retrieve/graph")
             {
-                return GetModifiedImage("/images/pic01.jpg");
+                return RetrieveGraph("/images/pic01.jpg");
             }
 
          
