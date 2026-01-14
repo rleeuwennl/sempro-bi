@@ -341,6 +341,12 @@ public class RequestHandler : DelegatingHandler
                 return HandleLogout(request);
             }
 
+            // Handle image endpoint
+            if (line == "/api/image/pic01")
+            {
+                return GetFile("/images/pic01.jpg", "image/jpeg");
+            }
+
             // Update YouTube insluit code in liturgie JSON file
             if (line == "/api/liturgie/update-insluit" && request.Method == HttpMethod.Post)
             {
