@@ -1,26 +1,24 @@
 /* Year Month Picker Styles */
 
-.content-flex-wrapper {
-    display: flex;
-    gap: 2rem;
-    align-items: flex-start;
-    margin-bottom: 2rem;
+/* Increase container width for main content area */
+#main .container {
+    max-width: 95% !important;
+    width: 95% !important;
 }
 
-.image-section {
-    flex: 1;
-    max-width: 50%;
+/* Reduce vertical white space */
+#main {
+    padding-top: 2rem !important;
 }
 
-.image-section img {
-    width: 100%;
-    height: auto;
-    border-radius: 4px;
+#content {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
 }
 
-.picker-section {
-    flex: 1;
-    max-width: 50%;
+#sidebar {
+    position: sticky;
+    top: 1rem;
 }
 
 .year-month-picker {
