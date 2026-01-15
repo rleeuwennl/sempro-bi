@@ -63,7 +63,7 @@
                     <div class="pgad-login-container">
                         <div class="pgad-login-header">
                             <h2>Admin Login</h2>
-                            <p>Protestantse Gemeente Angerlo-Doesburg</p>
+                            <p>Sempro Technologies</p>
                         </div>
                         <form id="pgad-login-form">
                             <div class="pgad-form-group">
