@@ -3,5 +3,11 @@
 ################################################################################
 
 /.vs
-server/WebServer/bin/*
-server/WebServer/bin/Debug/RemoteInvoker.application
+server/WebServer/bin/
+server/WebServer/bin/Debug
+server/WebServer/obj/Debug
+server/packages/
+server/jira/obj/
+server/.vs/
+server/jira/bin/
+server/jira/packages/
