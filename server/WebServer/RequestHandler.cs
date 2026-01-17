@@ -175,11 +175,16 @@ public class RequestHandler : DelegatingHandler
             token = request.RequestUri.ParseQueryString()["token"];
         }
         
+        Console.WriteLine($"GetUsernameFromToken - Token: {token}, TokenExists: {tokenToUsername.ContainsKey(token ?? "")}");
+        
         if (!string.IsNullOrEmpty(token) && tokenToUsername.ContainsKey(token))
         {
-            return tokenToUsername[token];
+            string username = tokenToUsername[token];
+            Console.WriteLine($"GetUsernameFromToken - Found username: {username}");
+            return username;
         }
         
+        Console.WriteLine("GetUsernameFromToken - No username found for token");
         return null;
     }
 

@@ -14,7 +14,7 @@
         const startYear = currentYear - 5;
         const endYear = currentYear + 5;
         
-        selectedYear = currentYear; // Default to current year
+        selectedYear = 2025; // Default to 2025
         
         renderYearSelect(startYear, endYear);
         setupYearSelect();

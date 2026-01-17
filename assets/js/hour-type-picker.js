@@ -17,9 +17,9 @@
     });
     
     function initializeHourTypePicker() {
-        // Initialize selection state
+        // Initialize selection state - all selected by default
         hourTypes.forEach(type => {
-            selectionState[type] = false;
+            selectionState[type] = true;
         });
         
         renderHourTypes();
@@ -53,6 +53,7 @@
             .attr('type', 'checkbox')
             .addClass('hour-type-checkbox')
             .attr('data-type', type)
+            .prop('checked', selectionState[type])
             .on('change', function() {
                 onHourTypeCheckboxChange(type, $(this).is(':checked'));
             });

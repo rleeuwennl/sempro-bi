@@ -9,7 +9,7 @@
         inactivityTimer: null,
 
         init: function() {
-            this.token = localStorage.getItem('pgad_token');
+            this.token = sessionStorage.getItem('pgad_token');
             if (this.token) {
                 this.isAuthenticated = true;
                 this.showAuthUI();
@@ -18,6 +18,11 @@
 
             // Create login modal HTML
             this.createLoginModal();
+
+            // Show login modal on first visit if not authenticated
+            if (!this.isAuthenticated) {
+                this.showLoginModal();
+            }
 
             // Listen for Ctrl+Shift+L
             $(document).on('keydown', function(e) {
@@ -137,7 +142,7 @@
                 if (data.success && data.token) {
                     SimpleAuth.token = data.token;
                     SimpleAuth.isAuthenticated = true;
-                    localStorage.setItem('pgad_token', SimpleAuth.token);
+                    sessionStorage.setItem('pgad_token', SimpleAuth.token);
                     SimpleAuth.closeLoginModal();
                     SimpleAuth.showAuthUI();
                     SimpleAuth.startInactivityTimer();
@@ -172,7 +177,7 @@
             .always(function() {
                 SimpleAuth.token = null;
                 SimpleAuth.isAuthenticated = false;
-                localStorage.removeItem('pgad_token');
+                sessionStorage.removeItem('pgad_token');
                 SimpleAuth.hideAuthUI();
                 // Refresh the page after logout
                 setTimeout(function() {
