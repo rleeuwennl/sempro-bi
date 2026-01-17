@@ -15,8 +15,8 @@ namespace RemoteInvoker
              */
 
             Uri baseAddres;
-            //baseAddres = new Uri("https://localhost:443");
-            baseAddres = new Uri("http://localhost:8080");
+            baseAddres = new Uri("https://sempro.dsea.nl:8080");
+            //baseAddres = new Uri("http://localhost:8080");
 
             // Set up server configuration
             HttpSelfHostConfiguration config = new HttpSelfHostConfiguration(baseAddres);

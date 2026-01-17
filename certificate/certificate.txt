@@ -1,13 +1,62 @@
-The pgad.dsea.nl certificate is located at https://encryptssl.com/dashboard
+
+User: I have already appropiate certificates, please use them in your answer, see C:\sempro-bi\certificate
+
+GitHub Copilot: Read [](file:///c%3A/sempro-bi/certificate)
+
+Read [](file:///c%3A/sempro-bi/certificate/certificate.txt)
+
+Perfect! You have `sempro.dsea.nl.pfx` certificate. Here's how to configure it:
+
+**Step 1: Import the PFX certificate to Windows Certificate Store (PowerShell as Administrator):**
+
+```powershell
+# Import the certificate
+$pfxPath = "C:\sempro-bi\certificate\sempro.dsea.nl.pfx"
+$pfxPassword = ConvertTo-SecureString "Anneloes123!" -AsPlainText -Force
+$cert = Import-PfxCertificate -FilePath $pfxPath -CertStoreLocation Cert:\LocalMachine\My -Password $pfxPassword
+
+# Get the thumbprint
+$thumbprint = $cert.Thumbprint
+Write-Host "Certificate Thumbprint: $thumbprint"
+
+# Bind certificate to port 8080
+netsh http add sslcert ipport=0.0.0.0:8080 certhash=$thumbprint appid="{12345678-1234-1234-1234-123456789012}"
+
+# Allow firewall access
+New-NetFirewallRule -DisplayName "HTTPS 8080 Sempro" -Direction Inbound -LocalPort 8080 -Protocol TCP -Action Allow
+```
+
+**Step 2: Update WebService.cs to use sempro.dsea.nl:** 
+
+Read [](file:///c%3A/sempro-bi/server/WebServer/WebService.cs#15-15), lines 15 to 25
+
+Using "Replace String in File"
 
 
-rem C:\pgad>py -3 -m http.server 8
-rem https://encryptssl.com/   certificate for pgad.dsea.nl
-via mingw bash:
-openssl pkcs12 -export -out pgad.dsea.nl.pfx -inkey pgad.dsea.nl.key -in pgad.dsea.nl.crt
+```
 
+```
+Updated WebService.cs to use `https://sempro.dsea.nl:8080`.
 
-PFX password Anneloes123!
+**Complete setup commands (run as Administrator):**
 
-PS C:\pgad> (Get-PfxCertificate -FilePath .\pgad.dsea.nl.pfx -Password (ConvertTo-SecureString "Anneloes123!" -AsPlainText -Force)).Thumbprint
+```powershell
+# Import certificate
+$pfxPath = "C:\sempro-bi\certificate\sempro.dsea.nl.pfx"
+$pfxPassword = ConvertTo-SecureString "Anneloes123!" -AsPlainText -Force
+$cert = Import-PfxCertificate -FilePath $pfxPath -CertStoreLocation Cert:\LocalMachine\My -Password $pfxPassword
+$thumbprint = $cert.Thumbprint
 
+# Remove existing binding if any
+netsh http delete sslcert ipport=0.0.0.0:8080
+
+# Bind certificate to port 8080
+netsh http add sslcert ipport=0.0.0.0:8080 certhash=$thumbprint appid="{12345678-1234-1234-1234-123456789012}"
+
+# Configure firewall
+New-NetFirewallRule -DisplayName "HTTPS 8080 Sempro" -Direction Inbound -LocalPort 8080 -Protocol TCP -Action Allow
+```
+
+After running these commands and restarting your server, it will be accessible at `https://sempro.dsea.nl:8080`
+
+Made changes.
