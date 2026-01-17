@@ -18,6 +18,16 @@ public class RequestHandler : DelegatingHandler
     private static HashSet<string> validTokens = new HashSet<string>();
     private static readonly string ADMIN_USERNAME = "pgad";
     private static readonly string ADMIN_PASSWORD = "JezusIsKoning!"; // Change this!
+    
+    // User list for selection
+    private static readonly Dictionary<string, string> Users = new Dictionary<string, string>
+    {
+        { "pgad", "JezusIsKoning!" },
+        { "john.doe", "password123" },
+        { "jane.smith", "password456" },
+        { "admin", "admin" }
+    };
+    
     public static JiraManager jiraManager = new JiraManager();
 
     public RequestHandler()
@@ -131,6 +141,24 @@ public class RequestHandler : DelegatingHandler
         return Task.FromResult(response);
     }
 
+    private Task<HttpResponseMessage> HandleGetUsers(HttpRequestMessage request)
+    {
+        try
+        {
+            var userList = Users.Keys.ToList();
+            var usersJson = "[\"" + string.Join("\",\"", userList) + "\"]";
+            var response = new HttpResponseMessage();
+            response.Content = new StringContent(usersJson);
+            response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            return Task.FromResult(response);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error getting users: " + ex.Message);
+            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.InternalServerError));
+        }
+    }
+
     private Task<HttpResponseMessage> HandleAuthorization(HttpRequestMessage request)
     {
         try
@@ -143,12 +171,12 @@ public class RequestHandler : DelegatingHandler
             var username = userMatch.Success ? userMatch.Groups[1].Value : "";
             var password = passMatch.Success ? passMatch.Groups[1].Value : "";
 
-            if (username == ADMIN_USERNAME && password == ADMIN_PASSWORD)
+            if (Users.ContainsKey(username) && Users[username] == password)
             {
                 var token = Guid.NewGuid().ToString();
                 validTokens.Add(token);
                 var response = new HttpResponseMessage();
-                response.Content = new StringContent("{\"success\":true,\"token\":\"" + token + "\"}");
+                response.Content = new StringContent("{\"success\":true,\"token\":\"" + token + "\",\"username\":\"" + username + "\"}");
                 response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
                 Console.WriteLine("Login successful for: " + username);
                 return Task.FromResult(response);
@@ -291,6 +319,11 @@ public class RequestHandler : DelegatingHandler
             string path = Path.GetDirectoryName(line);
 
             // Handle authorization endpoints
+            if (line == "/api/auth/users")
+            {
+                return HandleGetUsers(request);
+            }
+            
             if (line == "/api/auth/login")
             {
                 return HandleAuthorization(request);

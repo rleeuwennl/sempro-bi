@@ -67,8 +67,10 @@
                         </div>
                         <form id="pgad-login-form">
                             <div class="pgad-form-group">
-                                <label for="pgad-username">Username</label>
-                                <input type="text" id="pgad-username" name="username" placeholder="Enter username" required autocomplete="username" />
+                                <label for="pgad-user-select">Select User</label>
+                                <select id="pgad-user-select" name="user" class="pgad-user-select">
+                                    <option value="">Loading users...</option>
+                                </select>
                             </div>
                             <div class="pgad-form-group">
                                 <label for="pgad-password">Password</label>
@@ -85,15 +87,37 @@
             `;
             $('body').append(modalHtml);
             
+            // Load users list
+            this.loadUsers();
+            
             $('#pgad-login-form').on('submit', function(e) {
                 e.preventDefault();
-                SimpleAuth.login($('#pgad-username').val(), $('#pgad-password').val());
+                SimpleAuth.login($('#pgad-user-select').val(), $('#pgad-password').val());
+            });
+        },
+
+        loadUsers: function() {
+            $.ajax({
+                url: '/api/auth/users',
+                method: 'GET'
+            })
+            .done(function(users) {
+                var select = $('#pgad-user-select');
+                select.empty();
+                select.append('<option value="">-- Select a user --</option>');
+                users.forEach(function(user) {
+                    select.append('<option value="' + user + '">' + user + '</option>');
+                });
+            })
+            .fail(function() {
+                $('#pgad-user-select').html('<option value="">Failed to load users</option>');
             });
         },
 
         showLoginModal: function() {
             $('#pgad-login-modal').addClass('pgad-active');
-            $('#pgad-username').focus();
+            this.loadUsers(); // Reload users when showing modal
+            $('#pgad-password').focus();
         },
 
         closeLoginModal: function() {

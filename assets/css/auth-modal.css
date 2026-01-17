@@ -90,7 +90,9 @@
     letter-spacing: 0.5px;
 }
 
-.pgad-form-group input {
+.pgad-form-group input,
+.pgad-form-group select,
+.pgad-user-select {
     width: 100%;
     padding: 12px 14px;
     border: 2px solid #e0e0e0;
@@ -102,11 +104,17 @@
     background-color: #f8f8f8;
 }
 
-.pgad-form-group input:focus {
+.pgad-form-group input:focus,
+.pgad-form-group select:focus,
+.pgad-user-select:focus {
     outline: none;
     border-color: #34495e;
     background-color: #ffffff;
     box-shadow: 0 0 0 3px rgba(52, 73, 94, 0.1);
+}
+
+.pgad-user-select {
+    cursor: pointer;
 }
 
 .pgad-form-group input::placeholder {
