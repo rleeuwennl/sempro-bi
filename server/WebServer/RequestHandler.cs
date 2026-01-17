@@ -256,6 +256,16 @@ public class RequestHandler : DelegatingHandler
                 Rectangle r = new Rectangle(112, 31, 988, 290);
                 graphics.DrawRectangle(pen, r);
 
+                // Draw "Melexis" text above the rectangle (centered)
+                StringFormat sfCenter = new StringFormat();
+                sfCenter.Alignment = StringAlignment.Center;
+                Rectangle titleRect = new Rectangle(r.Left, r.Top - 25, r.Width, 20);
+                using (var titleFont = new Font("Arial", 12, FontStyle.Bold))
+                {
+                    graphics.DrawString("Melexis", titleFont, blueBrush, titleRect, sfCenter);
+                }
+
+                // Draw year text below the rectangle
                 StringFormat sf = new StringFormat();
                 sf.Alignment = StringAlignment.Center;
                 Rectangle ClientRectangle = new Rectangle(r.Left, r.Bottom+5, r.Width, 30);
@@ -456,7 +466,7 @@ public class RequestHandler : DelegatingHandler
     }
 
     /// <summary>
-    /// Draws a vertical scale with grid lines
+    /// Draws a vertical scale with grid lines and vertical axis label
     /// </summary>
     /// <param name="graphics">Graphics object to draw on</param>
     /// <param name="x0">Starting X position</param>
@@ -469,6 +479,19 @@ public class RequestHandler : DelegatingHandler
     /// <param name="brush">Brush for scale labels</param>
     private void DrawVerticalScale(Graphics graphics, int x0, int y0, int width, int height, int maxValue, int steps, Font font, Brush brush)
     {
+        // Draw vertical axis label (rotated 90 degrees)
+        using (var labelFont = new Font("Arial", 10, FontStyle.Bold))
+        {
+            graphics.TranslateTransform(x0 - 45, y0 + height / 2);
+            graphics.RotateTransform(-90);
+            
+            StringFormat sf = new StringFormat();
+            sf.Alignment = StringAlignment.Center;
+            graphics.DrawString("Sum logged hours", labelFont, brush, 0, 0, sf);
+            
+            graphics.ResetTransform();
+        }
+        
         for (int i = 0; i <= steps; i++)
         {
             int scaleValue = (maxValue * i) / steps;
