@@ -1,4 +1,6 @@
-﻿namespace SemproJira
+﻿using System;
+
+namespace SemproJira
 {
     public class WorklogRecord
     {
@@ -9,7 +11,7 @@
         public string TypeOfTicket { get; set; } = "";
         public string Author { get; set; } = "";
         public double TimeSpent { get; set; } = new double();
-        public string WorkLogDate { get; set; } = "";
+        public DateTime WorkLogDate { get; set; } = DateTime.MinValue;
         public string WorkLogID { get; set; } = "";
         public string Comment { get; set; } = "";
         public string HourType { get; set; } = "";

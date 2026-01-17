@@ -77,6 +77,11 @@
     function logSelection() {
         const selected = getSelectedHourTypes();
         console.log('Selected hour types:', selected);
+        
+        // Trigger graph update
+        if (window.GraphLoader && typeof window.GraphLoader.update === 'function') {
+            window.GraphLoader.update();
+        }
     }
     
     function getSelectedHourTypes() {

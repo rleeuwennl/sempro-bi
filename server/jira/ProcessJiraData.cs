@@ -54,8 +54,8 @@ namespace SemproJira
                     string author = string.Empty;
                     double timeSpent = new double();
                     string workLogID = string.Empty;
-                    string workLogDate = string.Empty;
-                    string created = string.Empty;
+                    DateTime workLogDate = DateTime.MinValue;
+                    DateTime created = DateTime.MinValue;
                     string comment = string.Empty;
                     string linkedIssueKey = string.Empty;
                     string hourType = string.Empty;
@@ -133,7 +133,8 @@ namespace SemproJira
                             author = worklog.author.displayName;
                             timeSpent = Convert.ToDouble(worklog.timeSpentSeconds) / 3600;
                             workLogID = worklog.id;
-                            workLogDate = worklog.started;
+                            string dateString = worklog.started;
+                            DateTime.TryParse(dateString, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out workLogDate);
                             comment = string.Empty;
 
                             WorklogRecord record = new WorklogRecord()

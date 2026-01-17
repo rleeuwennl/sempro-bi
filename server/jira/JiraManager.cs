@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
@@ -35,7 +36,7 @@ namespace SemproJira
 
             foreach (var organisation in organisationWorkLogs)
             {
-                string filePath = @"c:\jira\" + organisation.Key + ".xlsm";
+                string filePath = @"c:\jira\export\" + organisation.Key + ".xlsm";
                 CreateExcelFile(filePath, organisationWorkLogs[organisation.Key]);
             }
         }
@@ -81,7 +82,7 @@ namespace SemproJira
                         CreateCell(w.WorkLogID?.ToString() ?? "", rowIndex),
                         CreateCell(w.IssueKey ?? "", rowIndex),
                         CreateCell(w.LinkedIssueKey ?? "", rowIndex),
-                        CreateCell(w.WorkLogDate?.ToString() ?? "", rowIndex),
+                        CreateCell(w.WorkLogDate != DateTime.MinValue ? w.WorkLogDate.ToString("yyyy-MM-dd HH:mm:ss") : "", rowIndex),
                         CreateCell(w.TimeSpent.ToString() ?? "", rowIndex),
                         CreateCell(w.Organization ?? "", rowIndex),
                         CreateCell(w.Classification ?? "", rowIndex),

@@ -9,52 +9,178 @@ using System.Collections.Generic;
 using System.Linq;
 using SemproJira;
 using System.Drawing;
+using Newtonsoft.Json.Linq;
+
+// Customer contract data structure
+public class CustomerContractEntry
+{
+    public int Year { get; set; }
+    public double ContractHours { get; set; }
+    public string HourType { get; set; }
+
+}
 
 // see: https://docs.microsoft.com/en-us/aspnet/web-api/overview/advanced/http-message-handlers
 public class RequestHandler : DelegatingHandler
 {
     private int vistitors = 0;
-    // Simple in-memory token store (valid tokens)
-    private static HashSet<string> validTokens = new HashSet<string>();
-    private static readonly string ADMIN_USERNAME = "pgad";
-    private static readonly string ADMIN_PASSWORD = "JezusIsKoning!"; // Change this!
+    // Token store with username mapping
+    private static Dictionary<string, string> tokenToUsername = new Dictionary<string, string>();
+    private static readonly string UsersFilePath = @"c:\jira\users.json";
     
-    // User list for selection
-    private static readonly Dictionary<string, string> Users = new Dictionary<string, string>
-    {
-        {"Melexis Ieper Rev","test"},
-        {"","test"},
-        {"Melexis Ieper","test"},
-        {"Melexis Sofia","test"},
-        {"SwissSem","test"},
-        {"Valeo Sablé","test"},
-        {"Danfoss Flensburg","test"},
-        {"Danfoss Utica","test"},
-        {"Inovance","test"},
-        {"Sempro Demo","test"},
-        {"sempro.nl","test"},
-        {"Sempro Malaysia","test"}
-    };
+    // User list loaded from JSON file
+    private static Dictionary<string, string> Users = new Dictionary<string, string>();
+    
+    // Customer contract hours loaded from JSON file
+    private static Dictionary<string, Dictionary<int, Dictionary<string, double>>> customerContracts = new Dictionary<string, Dictionary<int,Dictionary<string,double>>>();
     
     public static JiraManager jiraManager = new JiraManager();
 
     public RequestHandler()
     {
-
+        LoadUsers();
+        LoadCustomerContracts();
     }
 
     /// <summary>
-    /// Check if request has valid authorization token
+    /// Load users from JSON file
+    /// </summary>
+    private static void LoadUsers()
+    {
+        try
+        {
+            if (File.Exists(UsersFilePath))
+            {
+                string json = File.ReadAllText(UsersFilePath);
+                var jsonObj = JObject.Parse(json);
+                var usersObj = jsonObj["users"];
+                
+                Users.Clear();
+                foreach (var user in usersObj)
+                {
+                    var property = (JProperty)user;
+                    Users[property.Name] = property.Value.ToString();
+                }
+                
+                Console.WriteLine($"Loaded {Users.Count} users from {UsersFilePath}");
+            }
+            else
+            {
+                Console.WriteLine($"Users file not found: {UsersFilePath}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading users: {ex.Message}");
+        }
+    }
+
+
+    private static void LoadCustomerContracts()
+    {
+        customerContracts.Clear();
+        foreach(var user in Users)
+        {
+            LoadCustomerContract(user.Key);
+        }
+    }
+
+    private static void LoadCustomerContract(string customer)
+    {        
+        string CustomerFilePath = $"c:\\jira\\contracts\\{customer}.json";
+
+        customerContracts.Add(customer,new Dictionary<int, Dictionary<string, double>>());
+
+        try
+        {
+            if (File.Exists(CustomerFilePath))
+            {
+                string json = File.ReadAllText(CustomerFilePath);
+                var jsonObj = JObject.Parse(json);
+                var customersArray = jsonObj["contracts"];
+                
+                foreach (var contract in customersArray)
+                {
+                    var contractEntry = new CustomerContractEntry
+                    {
+                        Year = contract["Contract_Year"]?.Value<int>() ?? 0,
+                        ContractHours = contract["Contract_Hours"]?.Value<double>() ?? 0.0,
+                        HourType = contract["Hour_Type"]?.Value<string>() ?? ""
+                    };
+
+                    if(!customerContracts[customer].ContainsKey(contractEntry.Year))
+                    {
+                        customerContracts[customer].Add(contractEntry.Year,new Dictionary<string, double>());
+                    }
+
+                    if(!customerContracts[customer][contractEntry.Year].ContainsKey(contractEntry.HourType))
+                    {
+                        //customerContracts[customer][contractEntry.Year].Add(contractEntry.HourType, new double);
+                    }
+
+                    customerContracts[customer][contractEntry.Year][contractEntry.HourType] = contractEntry.ContractHours;
+                }
+                
+                Console.WriteLine($"Loaded {customerContracts.Count} customer contracts from {CustomerFilePath}");
+            }
+            else
+            {
+                Console.WriteLine($"Customer file not found: {CustomerFilePath}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading customer contracts: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// <summary>
+    /// Check if request has valid authorization token (checks both header and query string)
     /// </summary>
     private bool IsAuthorized(HttpRequestMessage request)
     {
+        string token = null;
+        
+        // Check header first
         IEnumerable<string> authHeaders;
         if (request.Headers.TryGetValues("X-Auth-Token", out authHeaders))
         {
-            var token = authHeaders.FirstOrDefault();
-            return !string.IsNullOrEmpty(token) && validTokens.Contains(token);
+            token = authHeaders.FirstOrDefault();
         }
-        return false;
+        
+        // If not in header, check query string
+        if (string.IsNullOrEmpty(token))
+        {
+            token = request.RequestUri.ParseQueryString()["token"];
+        }
+        
+        return !string.IsNullOrEmpty(token) && tokenToUsername.ContainsKey(token);
+    }
+
+    private string GetUsernameFromToken(HttpRequestMessage request)
+    {
+        string token = null;
+        
+        // Check header first
+        IEnumerable<string> authHeaders;
+        if (request.Headers.TryGetValues("X-Auth-Token", out authHeaders))
+        {
+            token = authHeaders.FirstOrDefault();
+        }
+        
+        // If not in header, check query string
+        if (string.IsNullOrEmpty(token))
+        {
+            token = request.RequestUri.ParseQueryString()["token"];
+        }
+        
+        if (!string.IsNullOrEmpty(token) && tokenToUsername.ContainsKey(token))
+        {
+            return tokenToUsername[token];
+        }
+        
+        return null;
     }
 
     private HttpResponseMessage GetHtml(string filename)
@@ -141,7 +267,7 @@ public class RequestHandler : DelegatingHandler
         if (request.Headers.TryGetValues("X-Auth-Token", out authHeaders))
         {
             var token = authHeaders.FirstOrDefault();
-            validTokens.Remove(token);
+            tokenToUsername.Remove(token);
         }
         var response = new HttpResponseMessage();
         response.Content = new StringContent("{\"success\":true}");
@@ -182,7 +308,7 @@ public class RequestHandler : DelegatingHandler
             if (Users.ContainsKey(username) && Users[username] == password)
             {
                 var token = Guid.NewGuid().ToString();
-                validTokens.Add(token);
+                tokenToUsername[token] = username;
                 var response = new HttpResponseMessage();
                 response.Content = new StringContent("{\"success\":true,\"token\":\"" + token + "\",\"username\":\"" + username + "\"}");
                 response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
@@ -198,8 +324,12 @@ public class RequestHandler : DelegatingHandler
         return Task.FromResult(new HttpResponseMessage(HttpStatusCode.Unauthorized));
     }
 
-    private Task<HttpResponseMessage> RetrieveGraph(string file)
+    private Task<HttpResponseMessage> RetrieveGraph(string file, string selectUsername, string selectedYear, string selectedHourType)
     {
+        Console.WriteLine($"RetrieveGraph called by user: '{selectUsername}', Year: {selectedYear}, Hour Type: {selectedHourType}");
+
+   
+
         file = @"c:/sempro-bi" + file;
 
         if (!System.IO.File.Exists(file))
@@ -221,7 +351,7 @@ public class RequestHandler : DelegatingHandler
                         graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
                         graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
 
-                        DrawGraph(graphics, originalImage);
+                        DrawGraph(graphics, originalImage,selectUsername, selectedYear,selectedHourType);
                     }
 
                     // Save to memory stream
@@ -247,8 +377,76 @@ public class RequestHandler : DelegatingHandler
         }
     }
 
-    private void DrawGraph(Graphics graphics, Image originalImage)
+    private void DrawGraph(Graphics graphics, Image originalImage,string selectUsername,string selectedYear,string selectedHourType)
     {
+
+        List<WorklogRecord> worklogRecords = jiraManager.organisationWorkLogs[selectUsername];
+        Dictionary<int, double> worklogPerMonth = new Dictionary<int, double>();
+
+        double mechHours = 0.0;
+        double softHours = 0.0;
+        double visitHours = 0.0;
+
+
+
+        // create empty lists for each month
+        for (int month = 0; month < 12; month++)
+        {
+            worklogPerMonth[month] = 0;
+        }
+
+        int.TryParse(selectedYear, out int year);
+        foreach (WorklogRecord workLogRecord in worklogRecords)
+        {
+            if (workLogRecord.Organization != selectUsername) continue;
+           
+
+            DateTime workLogDateTime = workLogRecord.WorkLogDate;
+            if (workLogDateTime.Year != year) continue;
+
+            switch (workLogRecord.HourType)
+            {
+                case "Mechanical":
+                    mechHours += workLogRecord.TimeSpent;
+                    break;
+
+                case "Software":
+                    softHours += workLogRecord.TimeSpent;
+                    break;
+
+                case "Visit":
+                    visitHours += workLogRecord.TimeSpent;
+                    break;
+            }
+
+
+            if (!selectedHourType.Contains(workLogRecord.HourType)) continue;
+
+            int month = workLogDateTime.Month - 1;
+            worklogPerMonth[month] += workLogRecord.TimeSpent;
+        }
+
+
+        // determine max work hours per month
+        double maxWorkHoursPerMonth = 0;
+        for (int month = 0; month < 12; month++)
+        {
+            double w = worklogPerMonth[month];
+            if (w > maxWorkHoursPerMonth)
+            {
+                maxWorkHoursPerMonth = w;
+            }
+        }
+
+        if (maxWorkHoursPerMonth == 0)
+        {
+            maxWorkHoursPerMonth = 100;
+        }
+
+        int ymax = (((int)maxWorkHoursPerMonth / 100) + 1) * 100;
+
+
+
         int width = originalImage.Width;
         int height = originalImage.Height;
 
@@ -265,8 +463,9 @@ public class RequestHandler : DelegatingHandler
             int wtot = 970;
             int htot = 235;
             int months = 12;
-            int wbar = wtot / months;
-            int ymax = (months - 1);
+            int wbar = wtot / months;          
+
+
 
             // Draw vertical scale
             DrawVerticalScale(graphics, x0, y0, wtot, htot, ymax, 5, font, grayBrush);
@@ -275,19 +474,36 @@ public class RequestHandler : DelegatingHandler
             for (int month = 0; month < months; month++)
             {
                 int x = x0 + (month * wbar);
-                int y = ((month / 2) + 6);
+                //int y = ((month / 2) + 6);
+                int y = (int)(worklogPerMonth[month]+0.5);
                 int h = (htot * y) / ymax;
                 
                 DrawBar(graphics, x, y0, wbar, htot, h, y, ymax, month, font, blueBrush);
             }
 
-            DrawGauge(graphics, 210, 600, 160, 145.35, 250, "Mechanical hoursXX", 45);
-            DrawGauge(graphics,615, 600, 160, 145.35, 250, "Software hours", 45);
-            DrawGauge(graphics, 1003, 600, 160, 145.35, 250, "Visit hours", 45);
+
+            // show year contract
+            double maxMechHours=0.0;
+            double maxSoftHours=0.0;
+            double maxVistHours=0.0;
+
+            var customerContract = customerContracts[selectUsername];
+            if (customerContract.ContainsKey(year))
+            {
+                var yearContract = customerContract[year];
+                maxMechHours = yearContract["Mechanical"];
+                maxSoftHours = yearContract["Software"];
+                maxVistHours = yearContract["Visit"];
+            }
+
+
+            DrawGauge(graphics, 210, 600, 160, mechHours, maxMechHours, "Mechanical hours", 45);
+            DrawGauge(graphics,615, 600, 160, softHours, maxSoftHours, "Software hours", 45);
+            DrawGauge(graphics, 1003, 600, 160, visitHours, maxVistHours, "Visit hours", 45);
 
 
             // draw big rectangle box on the bars and year text beneath
-            using (var pen = new System.Drawing.Pen(System.Drawing.Color.Gray, 1))
+            using (var pen = new Pen(Color.Gray, 1))
             {
                 Rectangle r = new Rectangle(112, y0-31, 988, 290);
                 graphics.DrawRectangle(pen, r);
@@ -295,17 +511,16 @@ public class RequestHandler : DelegatingHandler
                 // Draw "Melexis" text above the rectangle (centered)
                 StringFormat sfCenter = new StringFormat();
                 sfCenter.Alignment = StringAlignment.Center;
-                Rectangle titleRect = new Rectangle(r.Left, r.Top - 25, r.Width, 20);
+                Rectangle titleRect = new Rectangle(r.Left, r.Top - 23, r.Width, 20);
                 using (var titleFont = new Font("Arial", 12, FontStyle.Bold))
                 {
-                    graphics.DrawString("Melexis", titleFont, blueBrush, titleRect, sfCenter);
+                    graphics.DrawString(selectUsername, titleFont, blueBrush, titleRect, sfCenter);
                 }
 
                 // Draw year text below the rectangle
                 StringFormat sf = new StringFormat();
                 sf.Alignment = StringAlignment.Center;
                 Rectangle ClientRectangle = new Rectangle(r.Left, r.Bottom+5, r.Width, 30);
-                int year = 2027;
                 using (var yearFont = new Font("Arial", 9, FontStyle.Regular))
                 {
                     graphics.DrawString($"{year}", yearFont, blueBrush, ClientRectangle, sf);
@@ -342,10 +557,19 @@ public class RequestHandler : DelegatingHandler
                 return HandleLogout(request);
             }
 
-            // Handle image endpoint
+            // Handle image endpoint (requires authentication)
             if (line == "/api/retrieve/graph")
             {
-                return RetrieveGraph("/images/pic01.jpg");
+                if (!IsAuthorized(request))
+                {
+                    return Task.FromResult(new HttpResponseMessage(HttpStatusCode.Unauthorized));
+                }
+
+                string username = GetUsernameFromToken(request);
+                string year = request.RequestUri.ParseQueryString()["year"] ?? "unknown";
+                string hourType = request.RequestUri.ParseQueryString()["hourType"] ?? "unknown";
+                
+                return RetrieveGraph("/images/pic01.jpg", username, year, hourType);
             }
 
 
@@ -571,7 +795,10 @@ public class RequestHandler : DelegatingHandler
     /// <param name="textBrush">Brush for text</param>
     private void DrawBar(Graphics graphics, int x, int y0, int barWidth, int chartHeight, int barHeight, int value, int maxValue, int monthIndex, Font font, Brush textBrush)
     {
-        RectangleF barRect = new RectangleF(x + 4, y0 + chartHeight - barHeight, barWidth - 8, barHeight);
+        // Handle zero height - draw a thin line instead
+        int effectiveHeight = barHeight > 0 ? barHeight : 2;
+        
+        RectangleF barRect = new RectangleF(x + 4, y0 + chartHeight - effectiveHeight, barWidth - 8, effectiveHeight);
         
         // Create gradient for 3D effect
         using (var gradientBrush = new System.Drawing.Drawing2D.LinearGradientBrush(
@@ -586,13 +813,13 @@ public class RequestHandler : DelegatingHandler
         // Add highlight on left edge for 3D effect
         using (var highlightPen = new Pen(Color.FromArgb(180, 150, 180, 255), 2))
         {
-            graphics.DrawLine(highlightPen, x + 5, y0 + chartHeight - barHeight, x + 5, y0 + chartHeight);
+            graphics.DrawLine(highlightPen, x + 5, y0 + chartHeight - effectiveHeight, x + 5, y0 + chartHeight);
         }
         
         // Add shadow on right edge for 3D effect
         using (var shadowPen = new Pen(Color.FromArgb(150, 0, 0, 100), 2))
         {
-            graphics.DrawLine(shadowPen, x + barWidth - 5, y0 + chartHeight - barHeight, x + barWidth - 5, y0 + chartHeight);
+            graphics.DrawLine(shadowPen, x + barWidth - 5, y0 + chartHeight - effectiveHeight, x + barWidth - 5, y0 + chartHeight);
         }
 
         // Draw month text (abbreviated for better readability)
@@ -611,7 +838,7 @@ public class RequestHandler : DelegatingHandler
         StringFormat sfTop = new StringFormat();
         sfTop.Alignment = StringAlignment.Center;
         sfTop.LineAlignment = StringAlignment.Far;
-        Rectangle topRect = new Rectangle(x, y0 + chartHeight - barHeight - 22, barWidth, 20);
+        Rectangle topRect = new Rectangle(x, y0 + chartHeight - effectiveHeight - 22, barWidth, 20);
         using (var whiteBrush = new SolidBrush(Color.Blue))
         {
             graphics.DrawString(value.ToString(), font, whiteBrush, topRect, sfTop);
