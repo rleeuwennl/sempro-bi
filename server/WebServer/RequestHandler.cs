@@ -22,10 +22,18 @@ public class RequestHandler : DelegatingHandler
     // User list for selection
     private static readonly Dictionary<string, string> Users = new Dictionary<string, string>
     {
-        { "pgad", "JezusIsKoning!" },
-        { "john.doe", "password123" },
-        { "jane.smith", "password456" },
-        { "admin", "admin" }
+        {"Melexis Ieper Rev","test"},
+        {"","test"},
+        {"Melexis Ieper","test"},
+        {"Melexis Sofia","test"},
+        {"SwissSem","test"},
+        {"Valeo Sablé","test"},
+        {"Danfoss Flensburg","test"},
+        {"Danfoss Utica","test"},
+        {"Inovance","test"},
+        {"Sempro Demo","test"},
+        {"sempro.nl","test"},
+        {"Sempro Malaysia","test"}
     };
     
     public static JiraManager jiraManager = new JiraManager();

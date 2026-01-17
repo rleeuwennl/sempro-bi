@@ -34,6 +34,12 @@ namespace SemproJira
         {
             List<WorklogRecord> worklogRecords = new List<WorklogRecord>();
             var list = CollectJiraTickets();
+
+            // Reduced list!!
+            int l = list.Count;
+            list.RemoveRange(1000, l - 1000);
+            Console.WriteLine($"Using reduced list of {list.Count}   !!!!!!!!!!!!!!!!!!!!!!!!");
+
             int countDown = list.Count;
             foreach (var issue in list)
             {
@@ -170,11 +176,6 @@ namespace SemproJira
                 }
             }
 
-            foreach (var record in worklogRecords)
-            {
-                Console.WriteLine("IssueKey: {0}, LinkedIssueKey: {1}, Organization: {2}, Classification: {3}, TypeOfTicket: {4}, Author: {5}, TimeSpent: {6}, WorkLogDate: {7}, WorkLogID: {8}, Hour-type: {9}",
-                    record.IssueKey, record.LinkedIssueKey, record.Organization, record.Classification, record.TypeOfTicket, record.Author, record.TimeSpent, record.WorkLogDate, record.WorkLogID, record.HourType);
-            }
 
             return worklogRecords;
         }

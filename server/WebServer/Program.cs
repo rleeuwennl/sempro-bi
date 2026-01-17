@@ -28,7 +28,7 @@ namespace RemoteInvoker
         }
         static void Main(string[] args)
         {
-            //RequestHandler.jiraManager.GenerateAllOrganisationWorkLogs();
+            RequestHandler.jiraManager.GenerateAllOrganisationWorkLogs();
             WebService.StartWebService();
             Console.Write("Press any key to exit application");
             while (IsRunning)
