@@ -225,7 +225,7 @@ public class RequestHandler : DelegatingHandler
         using (var grayBrush = new SolidBrush(Color.Gray))
         {
             int x0 = 120;
-            int y0 = 62;
+            int y0 = 52;
             int wtot = 970;
             int htot = 235;
             int months = 12;
@@ -245,15 +245,15 @@ public class RequestHandler : DelegatingHandler
                 DrawBar(graphics, x, y0, wbar, htot, h, y, ymax, month, font, blueBrush);
             }
 
-            DrawGauge(graphics, 210, 630, 160, 145.35, 250, "Mechanical hoursXX", 45);
-            DrawGauge(graphics,615, 630, 160, 145.35, 250, "Software hours", 45);
-            DrawGauge(graphics, 1003, 630, 160, 145.35, 250, "Visit hours", 45);
+            DrawGauge(graphics, 210, 600, 160, 145.35, 250, "Mechanical hoursXX", 45);
+            DrawGauge(graphics,615, 600, 160, 145.35, 250, "Software hours", 45);
+            DrawGauge(graphics, 1003, 600, 160, 145.35, 250, "Visit hours", 45);
 
 
             // draw big rectangle box on the bars and year text beneath
             using (var pen = new System.Drawing.Pen(System.Drawing.Color.Gray, 1))
             {
-                Rectangle r = new Rectangle(112, 31, 988, 290);
+                Rectangle r = new Rectangle(112, y0-31, 988, 290);
                 graphics.DrawRectangle(pen, r);
 
                 // Draw "Melexis" text above the rectangle (centered)
@@ -270,7 +270,10 @@ public class RequestHandler : DelegatingHandler
                 sf.Alignment = StringAlignment.Center;
                 Rectangle ClientRectangle = new Rectangle(r.Left, r.Bottom+5, r.Width, 30);
                 int year = 2027;
-                graphics.DrawString($"{year}", font, blueBrush, ClientRectangle, sf);
+                using (var yearFont = new Font("Arial", 9, FontStyle.Regular))
+                {
+                    graphics.DrawString($"{year}", yearFont, blueBrush, ClientRectangle, sf);
+                }
             }
         }
 
@@ -551,14 +554,17 @@ public class RequestHandler : DelegatingHandler
             graphics.DrawLine(shadowPen, x + barWidth - 5, y0 + chartHeight - barHeight, x + barWidth - 5, y0 + chartHeight);
         }
 
-        // Draw month text
+        // Draw month text (abbreviated for better readability)
         DateTime date = DateTime.Now;
         date = new DateTime(date.Year, monthIndex + 1, date.Day);
-        string monthText = date.ToString("MMMM");
+        string monthText = date.ToString("MMM");  // Use abbreviated month name
         StringFormat sf = new StringFormat();
         sf.Alignment = StringAlignment.Center;
         Rectangle monthRect = new Rectangle(x, y0 + chartHeight + 5, barWidth, 30);
-        graphics.DrawString(monthText, font, textBrush, monthRect, sf);
+        using (var monthFont = new Font("Arial", 9, FontStyle.Regular))
+        {
+            graphics.DrawString(monthText, monthFont, textBrush, monthRect, sf);
+        }
 
         // Draw y value text on top of bar (horizontally centered)
         StringFormat sfTop = new StringFormat();
