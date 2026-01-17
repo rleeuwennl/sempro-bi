@@ -62,3 +62,7 @@ C:\sempro-bi\server\Webserver\obj\Debug\RemoteInvoker.application
 C:\sempro-bi\server\Webserver\obj\Debug\WebServer.csproj.CopyComplete
 C:\sempro-bi\server\Webserver\obj\Debug\RemoteInvoker.exe
 C:\sempro-bi\server\Webserver\obj\Debug\RemoteInvoker.pdb
+C:\sempro-bi\server\Webserver\bin\Debug\DocumentFormat.OpenXml.dll
+C:\sempro-bi\server\Webserver\bin\Debug\DocumentFormat.OpenXml.Framework.dll
+C:\sempro-bi\server\Webserver\bin\Debug\DocumentFormat.OpenXml.xml
+C:\sempro-bi\server\Webserver\bin\Debug\DocumentFormat.OpenXml.Framework.xml

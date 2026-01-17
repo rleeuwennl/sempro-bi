@@ -1,4 +1,4 @@
-﻿namespace Rest_API
+﻿namespace SemproJira
 {
     public class WorklogRecord
     {

@@ -77,6 +77,12 @@
     <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DocumentFormat.OpenXml, Version=3.4.1.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.3.4.1\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml.Framework, Version=3.4.1.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.Framework.3.4.1\lib\net46\DocumentFormat.OpenXml.Framework.dll</HintPath>
+    </Reference>
     <Reference Include="MailKit, Version=2.1.0.0, Culture=neutral, PublicKeyToken=4e064fe7c44a8f1b, processorArchitecture=MSIL">
       <HintPath>..\packages\MailKit.2.1.2\lib\net45\MailKit.dll</HintPath>
     </Reference>
@@ -132,8 +138,21 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\jira\Credentials.cs">
+      <Link>Credentials.cs</Link>
+    </Compile>
+    <Compile Include="..\jira\JiraManager.cs">
+      <Link>JiraManager.cs</Link>
+    </Compile>
+    <Compile Include="..\jira\ProcessJiraData.cs">
+      <Link>ProcessJiraData.cs</Link>
+    </Compile>
+    <Compile Include="..\jira\WorklogRecord.cs">
+      <Link>WorklogRecord.cs</Link>
+    </Compile>
     <Compile Include="RequestHandler.cs" />
     <Compile Include="ExtendHttpSelfHostConfiguration.cs" />
     <Compile Include="Program.cs" />

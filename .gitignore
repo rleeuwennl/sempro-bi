@@ -11,3 +11,5 @@ server/jira/obj/
 server/.vs/
 server/jira/bin/
 server/jira/packages/
+server/WebServer/bin/Debug/RemoteInvoker.application
+server/WebServer/bin/Debug/RemoteInvoker.application

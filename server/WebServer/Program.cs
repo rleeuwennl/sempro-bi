@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Reflection;
-using Genius2;
-using Microsoft.Win32;
+
 
 namespace RemoteInvoker
 {
@@ -31,6 +28,7 @@ namespace RemoteInvoker
         }
         static void Main(string[] args)
         {
+            //RequestHandler.jiraManager.GenerateAllOrganisationWorkLogs();
             WebService.StartWebService();
             Console.Write("Press any key to exit application");
             while (IsRunning)

@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.IO;
 
-namespace Rest_API
+namespace SemproJira
 {
     public class Credentials
     {

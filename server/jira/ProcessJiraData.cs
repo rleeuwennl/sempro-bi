@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 
-namespace Rest_API
+namespace SemproJira
 {
     public class ProcessJiraData
     {
@@ -37,7 +37,6 @@ namespace Rest_API
             int countDown = list.Count;
             foreach (var issue in list)
             {
-                Console.WriteLine($"{countDown--}");
                 dynamic tempTicket = JiraIssue(issue.id.Value);
                 string projectKey = tempTicket.fields.project.key;
 
@@ -197,7 +196,6 @@ namespace Rest_API
             {
                 try
                 {
-                    Console.WriteLine($"📂 Loading worklogs for {issueKey} from cache");
                     string cachedJson = File.ReadAllText(cacheFilePath);
                     dynamic cachedWorklogs = JsonConvert.DeserializeObject<dynamic>(cachedJson);
                     return cachedWorklogs;
@@ -319,7 +317,6 @@ namespace Rest_API
             {
                 try
                 {
-                    Console.WriteLine($"📂 Loading Jira issue {issueKey} from cache");
                     string cachedJson = File.ReadAllText(cacheFilePath);
                     dynamic cachedIssue = JsonConvert.DeserializeObject<dynamic>(cachedJson);
                     return cachedIssue;

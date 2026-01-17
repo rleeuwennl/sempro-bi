@@ -4,10 +4,11 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Http.Headers;
-using Newtonsoft.Json.Linq;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using SemproJira;
+using System.Drawing;
 
 // see: https://docs.microsoft.com/en-us/aspnet/web-api/overview/advanced/http-message-handlers
 public class RequestHandler : DelegatingHandler
@@ -17,7 +18,7 @@ public class RequestHandler : DelegatingHandler
     private static HashSet<string> validTokens = new HashSet<string>();
     private static readonly string ADMIN_USERNAME = "pgad";
     private static readonly string ADMIN_PASSWORD = "JezusIsKoning!"; // Change this!
-
+    public static JiraManager jiraManager = new JiraManager();
 
     public RequestHandler()
     {
@@ -79,7 +80,7 @@ public class RequestHandler : DelegatingHandler
         return response;
     }
 
-   
+
 
 
     protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
@@ -184,31 +185,7 @@ public class RequestHandler : DelegatingHandler
                         graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
                         graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
 
-                        // Draw the original image
-                        graphics.DrawImage(originalImage, 0, 0, originalImage.Width, originalImage.Height);
-
-                        // Add text overlay
-                        string overlayText = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                        using (var font = new System.Drawing.Font("Arial", 24, System.Drawing.FontStyle.Bold))
-                        //using (var brush = new System.Drawing.SolidBrush(System.Drawing.Color.White))
-                        using (var shadowBrush = new System.Drawing.SolidBrush(System.Drawing.Color.FromArgb(128, 0, 0, 0)))
-                        {
-                            // Measure text size
-                            var textSize = graphics.MeasureString(overlayText, font);
-                            float x = 10;
-                            float y = 10;
-
-                            // Draw shadow
-                            graphics.DrawString(overlayText, font, shadowBrush, x + 2, y + 12);
-                            // Draw text
-                            //graphics.DrawString(overlayText, font, brush, x, y + 14);
-                        }
-
-                        // Draw a rectangle border
-                        using (var pen = new System.Drawing.Pen(System.Drawing.Color.Red, 5))
-                        {
-                            // graphics.DrawRectangle(pen, 5, 5, bitmap.Width - 10, bitmap.Height - 10);
-                        }
+                        DrawGraph(graphics, originalImage);
                     }
 
                     // Save to memory stream
@@ -233,6 +210,108 @@ public class RequestHandler : DelegatingHandler
             return Task.FromResult<HttpResponseMessage>(null);
         }
     }
+
+    private void DrawGraph(Graphics graphics, Image originalImage)
+    {
+        int width = originalImage.Width;
+        int height = originalImage.Height;
+
+        graphics.DrawImage(originalImage, 0, 0, originalImage.Width, originalImage.Height);
+
+
+        using (var font = new Font("Arial", 8, FontStyle.Regular))
+        using (var blueBrush = new SolidBrush(Color.FromArgb(255, 0, 0, 255)))
+        using (var grayBrush = new SolidBrush(Color.Gray))
+        {
+            int x0 = 120;
+            int y0 = 62;
+
+            //graphics.DrawString(overlayText, font, shadowBrush, x + 2, y + 12);
+
+            int wtot = 970;
+            int htot = 235;
+            int months = 12;
+            int wbar = wtot / months;
+
+            for (int month = 0; month < months; month++)
+            {
+                // draw bar with 3D effect
+                int x = x0 + (month * wbar);
+
+                int ymax = (months - 1);
+                int y = ((month / 2) + 6);
+                int h = (htot * y) / ymax;
+                RectangleF blueRect = new RectangleF(x + 4, y0 + htot - h, wbar - 8, h);
+                
+                // Create gradient for 3D effect
+                using (var gradientBrush = new System.Drawing.Drawing2D.LinearGradientBrush(
+                    blueRect,
+                    Color.FromArgb(255, 100, 150, 255), // Lighter blue
+                    Color.FromArgb(255, 0, 0, 200),      // Darker blue
+                    System.Drawing.Drawing2D.LinearGradientMode.Horizontal))
+                {
+                    graphics.FillRectangle(gradientBrush, blueRect);
+                }
+                
+                // Add highlight on left edge for 3D effect
+                using (var highlightPen = new Pen(Color.FromArgb(180, 150, 180, 255), 2))
+                {
+                    graphics.DrawLine(highlightPen, x + 5, y0 + htot - h, x + 5, y0 + htot);
+                }
+                
+                // Add shadow on right edge for 3D effect
+                using (var shadowPen = new Pen(Color.FromArgb(150, 0, 0, 100), 2))
+                {
+                    graphics.DrawLine(shadowPen, x + wbar - 5, y0 + htot - h, x + wbar - 5, y0 + htot);
+                }
+
+
+                //draw month text
+                DateTime date = DateTime.Now;
+                date = new DateTime(date.Year, month + 1, date.Day);
+                string monthText = date.ToString("MMMM");
+                StringFormat sf = new StringFormat();
+                sf.Alignment = StringAlignment.Center;
+                Rectangle ClientRectangle = new Rectangle(x, y0 + htot + 5, wbar, 30);
+                graphics.DrawString(monthText, font, blueBrush, ClientRectangle, sf);
+
+                // Draw value text on top of bar
+                int barValue = (htot * ((month / 2) + 1)) / months;
+                StringFormat sfTop = new StringFormat();
+                sfTop.Alignment = StringAlignment.Center;
+                Rectangle topRect = new Rectangle(x, y0 + htot - h - 20, wbar, 20);
+                using (var whiteBrush = new SolidBrush(Color.White))
+                {
+                    graphics.DrawString(barValue.ToString(), font, whiteBrush, topRect, sfTop);
+                }
+
+               
+            }
+
+            DrawGauge(graphics, 210, 630, 160, 145.35, 250, "Mechanical hoursXX", 45);
+            DrawGauge(graphics,415, 630, 160, 145.35, 250, "Software hours", 45);
+            DrawGauge(graphics, 803, 630, 160, 145.35, 250, "Visit hours", 45);
+
+
+            // draw big rectangle box on the bars and year text beneath
+            using (var pen = new System.Drawing.Pen(System.Drawing.Color.Gray, 1))
+            {
+                Rectangle r = new Rectangle(112, 31, 988, 290);
+                graphics.DrawRectangle(pen, r);
+
+                StringFormat sf = new StringFormat();
+                sf.Alignment = StringAlignment.Center;
+                Rectangle ClientRectangle = new Rectangle(r.Left, r.Bottom+5, r.Width, 30);
+                int year = 2027;
+                graphics.DrawString($"{year}", font, blueBrush, ClientRectangle, sf);
+            }
+        }
+
+
+       
+
+    }
+
     private Task<HttpResponseMessage> ProcessRequest(HttpRequestMessage request)
     {
         try
@@ -258,7 +337,7 @@ public class RequestHandler : DelegatingHandler
                 return RetrieveGraph("/images/pic01.jpg");
             }
 
-         
+
 
             // For authorized requests, add to console output
             if (IsAuthorized(request))
@@ -273,7 +352,7 @@ public class RequestHandler : DelegatingHandler
                 return HandleRootIndex(request);
             }
 
-            if(line.StartsWith("/.well-known/acme-challenge"))
+            if (line.StartsWith("/.well-known/acme-challenge"))
             {
                 return GetFile(line, "text/plain");
             }
@@ -319,5 +398,106 @@ public class RequestHandler : DelegatingHandler
 
         return null;
     }
+
+    /// <summary>
+    /// Draws a beautiful semicircular gauge with gradient effects
+    /// </summary>
+    /// <param name="graphics">Graphics object to draw on</param>
+    /// <param name="x">X position of gauge center</param>
+    /// <param name="y">Y position of gauge bottom center</param>
+    /// <param name="radius">Radius of the gauge</param>
+    /// <param name="value">Current value to display</param>
+    /// <param name="maxValue">Maximum value of the gauge</param>
+    /// <param name="title">Title text above gauge</param>
+    /// <param name="arcThickness">Thickness of the arc</param>
+    public void DrawGauge(Graphics graphics, int x, int y, int radius, double value, double maxValue, string title = "Mechanical hours", int arcThickness = 40)
+    {
+        // Enable anti-aliasing for smooth curves
+        graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+        graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
+
+        // Calculate percentage
+        double percentage = Math.Min(Math.Max(value / maxValue, 0), 1);
+
+        // Define gauge rectangle
+        Rectangle gaugeRect = new Rectangle(x - radius, y - radius, radius * 2, radius * 2);
+        Rectangle innerRect = new Rectangle(x - radius + arcThickness, y - radius + arcThickness, 
+                                           (radius - arcThickness) * 2, (radius - arcThickness) * 2);
+
+        // Draw title
+        using (var titleFont = new Font("Segoe UI", 16, FontStyle.Regular))
+        using (var titleBrush = new SolidBrush(Color.FromArgb(50, 50, 50)))
+        {
+            StringFormat sf = new StringFormat();
+            sf.Alignment = StringAlignment.Center;
+            graphics.DrawString(title, titleFont, titleBrush, x, y - radius - 55, sf);
+        }
+
+        // Draw background arc (darker gray)
+        using (var bgPen = new Pen(Color.FromArgb(180, 180, 180), arcThickness))
+        {
+            bgPen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
+            bgPen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
+            graphics.DrawArc(bgPen, gaugeRect, 180, 180);
+        }
+
+        // Draw value arc with gradient effect
+        if (percentage > 0)
+        {
+            // Always use green color
+            Color startColor = Color.FromArgb(0, 120, 0);
+            Color endColor = Color.FromArgb(0, 180, 0);
+
+            using (var valuePen = new Pen(startColor, arcThickness))
+            {
+                valuePen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
+                valuePen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
+                
+                // Create gradient brush for the arc
+                using (var gradientBrush = new System.Drawing.Drawing2D.LinearGradientBrush(
+                    gaugeRect,
+                    startColor,
+                    endColor,
+                    System.Drawing.Drawing2D.LinearGradientMode.ForwardDiagonal))
+                {
+                    valuePen.Brush = gradientBrush;
+                    float sweepAngle = (float)(180 * percentage);
+                    graphics.DrawArc(valuePen, gaugeRect, 180, sweepAngle);
+                }
+            }
+
+            // Add inner shadow effect
+            using (var shadowPen = new Pen(Color.FromArgb(40, 0, 0, 0), arcThickness - 4))
+            {
+                shadowPen.StartCap = System.Drawing.Drawing2D.LineCap.Round;
+                shadowPen.EndCap = System.Drawing.Drawing2D.LineCap.Round;
+                float sweepAngle = (float)(180 * percentage);
+                Rectangle shadowRect = new Rectangle(gaugeRect.X + 2, gaugeRect.Y + 2, gaugeRect.Width, gaugeRect.Height);
+                graphics.DrawArc(shadowPen, shadowRect, 180, sweepAngle);
+            }
+        }
+
+        // Draw center value
+        using (var valueFont = new Font("Segoe UI Light", 36, FontStyle.Regular))
+        using (var valueBrush = new SolidBrush(Color.FromArgb(120, 120, 120)))
+        {
+            StringFormat sf = new StringFormat();
+            sf.Alignment = StringAlignment.Center;
+            graphics.DrawString(value.ToString("F2"), valueFont, valueBrush, x, y - radius / 3, sf);
+        }
+
+        // Draw min value label (bottom left)
+        using (var labelFont = new Font("Segoe UI", 12, FontStyle.Regular))
+        using (var labelBrush = new SolidBrush(Color.FromArgb(120, 120, 120)))
+        {
+            graphics.DrawString("1.23", labelFont, labelBrush, x - radius + 5, y + 20);
+            StringFormat sf = new StringFormat();
+            sf.Alignment = StringAlignment.Far;
+            graphics.DrawString(maxValue.ToString("F0"), labelFont, labelBrush, x + radius - 5, y + 20, sf);
+        }
+
+    }
+
+   
 }
 

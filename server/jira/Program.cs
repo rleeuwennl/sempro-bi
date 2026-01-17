@@ -1,17 +1,14 @@
 ﻿namespace jira
 {
-    using Rest_API;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
+    using SemproJira;
+
 
     class Program
     {
         static void Main(string[] args)
         {
             JiraManager jiraManager=new JiraManager();
+            jiraManager.GenerateAllOrganisationWorkLogs();
         }
     }
 }

@@ -1,47 +1,111 @@
 ﻿using System.Collections.Generic;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
 
-namespace Rest_API
+namespace SemproJira
 {
     public class JiraManager
     {
+        public Dictionary<string, List<WorklogRecord>> organisationWorkLogs;
         private readonly ProcessJiraData JiraData;
-        private DataBaseManager mDataBaseManager;
+
         public JiraManager()
         {
             JiraData = new ProcessJiraData();
-            mDataBaseManager = new DataBaseManager();
-            MergeJiraData();
         }
 
-        public void MergeJiraData()
+        public void GenerateAllOrganisationWorkLogs()
         {
             var Data = JiraData.GetJiraData();
 
 
-            Dictionary<string, List<WorklogRecord>> organisations = new Dictionary<string, List<WorklogRecord>>();
+            organisationWorkLogs = new Dictionary<string, List<WorklogRecord>>();
 
             foreach (WorklogRecord worklogRecord in Data)
             {
                 string organisation = worklogRecord.Organization;
-                if (!organisations.ContainsKey(organisation))
+                if (!organisationWorkLogs.ContainsKey(organisation))
                 {
-                    organisations.Add(organisation, new List<WorklogRecord>());
+                    organisationWorkLogs.Add(organisation, new List<WorklogRecord>());
                 }
 
-                organisations[organisation].Add(worklogRecord);
+                organisationWorkLogs[organisation].Add(worklogRecord);
             }
 
-            foreach (var organisation in organisations)
+            foreach (var organisation in organisationWorkLogs)
             {
-                string output = "";
-                output += $"Id;Ticket_Key;Linked_Key;Date;Logged_Hours;Organization;Classification;Type_Ticket;Description;Hour_Type\r\n";
-                foreach (WorklogRecord w in organisations[organisation.Key])
+                string filePath = @"c:\jira\" + organisation.Key + ".xlsm";
+                CreateExcelFile(filePath, organisationWorkLogs[organisation.Key]);
+            }
+        }
+
+        private void CreateExcelFile(string filePath, List<WorklogRecord> records)
+        {
+            using (SpreadsheetDocument document = SpreadsheetDocument.Create(filePath, SpreadsheetDocumentType.MacroEnabledWorkbook))
+            {
+                WorkbookPart workbookPart = document.AddWorkbookPart();
+                workbookPart.Workbook = new Workbook();
+
+                WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
+                worksheetPart.Worksheet = new Worksheet(new SheetData());
+
+                Sheets sheets = document.WorkbookPart.Workbook.AppendChild(new Sheets());
+                Sheet sheet = new Sheet() { Id = document.WorkbookPart.GetIdOfPart(worksheetPart), SheetId = 1, Name = "Jira Data" };
+                sheets.Append(sheet);
+
+                SheetData sheetData = worksheetPart.Worksheet.GetFirstChild<SheetData>();
+
+                // Add header row
+                Row headerRow = new Row() { RowIndex = 1 };
+                headerRow.Append(
+                    CreateCell("Id", 1),
+                    CreateCell("Ticket_Key", 1),
+                    CreateCell("Linked_Key", 1),
+                    CreateCell("Date", 1),
+                    CreateCell("Logged_Hours", 1),
+                    CreateCell("Organization", 1),
+                    CreateCell("Classification", 1),
+                    CreateCell("Type_Ticket", 1),
+                    CreateCell("Description", 1),
+                    CreateCell("Hour_Type", 1)
+                );
+                sheetData.Append(headerRow);
+
+                // Add data rows
+                uint rowIndex = 2;
+                foreach (WorklogRecord w in records)
                 {
-                    output += $"{w.WorkLogID};{w.IssueKey};{w.LinkedIssueKey};{w.WorkLogDate};{w.TimeSpent};{w.Organization};{w.Classification};{w.TypeOfTicket};{w.Comment};{w.HourType}\r\n";
+                    Row dataRow = new Row() { RowIndex = rowIndex };
+                    dataRow.Append(
+                        CreateCell(w.WorkLogID?.ToString() ?? "", rowIndex),
+                        CreateCell(w.IssueKey ?? "", rowIndex),
+                        CreateCell(w.LinkedIssueKey ?? "", rowIndex),
+                        CreateCell(w.WorkLogDate?.ToString() ?? "", rowIndex),
+                        CreateCell(w.TimeSpent.ToString() ?? "", rowIndex),
+                        CreateCell(w.Organization ?? "", rowIndex),
+                        CreateCell(w.Classification ?? "", rowIndex),
+                        CreateCell(w.TypeOfTicket ?? "", rowIndex),
+                        CreateCell(w.Comment ?? "", rowIndex),
+                        CreateCell(w.HourType ?? "", rowIndex)
+                    );
+                    sheetData.Append(dataRow);
+                    rowIndex++;
                 }
 
-                System.IO.File.WriteAllText(@"c:\jira\" + organisation.Key + ".csv",output);
+                workbookPart.Workbook.Save();
             }
+        }
+
+        private Cell CreateCell(string text, uint rowIndex)
+        {
+            Cell cell = new Cell()
+            {
+                DataType = CellValues.InlineString,
+                CellValue = new CellValue(text)
+            };
+            cell.Append(new InlineString(new DocumentFormat.OpenXml.Spreadsheet.Text(text)));
+            return cell;
         }
     }
 }
