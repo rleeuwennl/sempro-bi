@@ -216,7 +216,8 @@ public class RequestHandler : DelegatingHandler
         int width = originalImage.Width;
         int height = originalImage.Height;
 
-        graphics.DrawImage(originalImage, 0, 0, originalImage.Width, originalImage.Height);
+        //graphics.DrawImage(originalImage, 0, 0, originalImage.Width, originalImage.Height);
+        graphics.Clear(Color.White);
 
 
         using (var font = new Font("Arial", 8, FontStyle.Regular))
@@ -225,72 +226,28 @@ public class RequestHandler : DelegatingHandler
         {
             int x0 = 120;
             int y0 = 62;
-
-            //graphics.DrawString(overlayText, font, shadowBrush, x + 2, y + 12);
-
             int wtot = 970;
             int htot = 235;
             int months = 12;
             int wbar = wtot / months;
+            int ymax = (months - 1);
 
+            // Draw vertical scale
+            DrawVerticalScale(graphics, x0, y0, wtot, htot, ymax, 5, font, grayBrush);
+
+            // Draw bars
             for (int month = 0; month < months; month++)
             {
-                // draw bar with 3D effect
                 int x = x0 + (month * wbar);
-
-                int ymax = (months - 1);
                 int y = ((month / 2) + 6);
                 int h = (htot * y) / ymax;
-                RectangleF blueRect = new RectangleF(x + 4, y0 + htot - h, wbar - 8, h);
                 
-                // Create gradient for 3D effect
-                using (var gradientBrush = new System.Drawing.Drawing2D.LinearGradientBrush(
-                    blueRect,
-                    Color.FromArgb(255, 100, 150, 255), // Lighter blue
-                    Color.FromArgb(255, 0, 0, 200),      // Darker blue
-                    System.Drawing.Drawing2D.LinearGradientMode.Horizontal))
-                {
-                    graphics.FillRectangle(gradientBrush, blueRect);
-                }
-                
-                // Add highlight on left edge for 3D effect
-                using (var highlightPen = new Pen(Color.FromArgb(180, 150, 180, 255), 2))
-                {
-                    graphics.DrawLine(highlightPen, x + 5, y0 + htot - h, x + 5, y0 + htot);
-                }
-                
-                // Add shadow on right edge for 3D effect
-                using (var shadowPen = new Pen(Color.FromArgb(150, 0, 0, 100), 2))
-                {
-                    graphics.DrawLine(shadowPen, x + wbar - 5, y0 + htot - h, x + wbar - 5, y0 + htot);
-                }
-
-
-                //draw month text
-                DateTime date = DateTime.Now;
-                date = new DateTime(date.Year, month + 1, date.Day);
-                string monthText = date.ToString("MMMM");
-                StringFormat sf = new StringFormat();
-                sf.Alignment = StringAlignment.Center;
-                Rectangle ClientRectangle = new Rectangle(x, y0 + htot + 5, wbar, 30);
-                graphics.DrawString(monthText, font, blueBrush, ClientRectangle, sf);
-
-                // Draw value text on top of bar
-                int barValue = (htot * ((month / 2) + 1)) / months;
-                StringFormat sfTop = new StringFormat();
-                sfTop.Alignment = StringAlignment.Center;
-                Rectangle topRect = new Rectangle(x, y0 + htot - h - 20, wbar, 20);
-                using (var whiteBrush = new SolidBrush(Color.White))
-                {
-                    graphics.DrawString(barValue.ToString(), font, whiteBrush, topRect, sfTop);
-                }
-
-               
+                DrawBar(graphics, x, y0, wbar, htot, h, y, ymax, month, font, blueBrush);
             }
 
             DrawGauge(graphics, 210, 630, 160, 145.35, 250, "Mechanical hoursXX", 45);
-            DrawGauge(graphics,415, 630, 160, 145.35, 250, "Software hours", 45);
-            DrawGauge(graphics, 803, 630, 160, 145.35, 250, "Visit hours", 45);
+            DrawGauge(graphics,615, 630, 160, 145.35, 250, "Software hours", 45);
+            DrawGauge(graphics, 1003, 630, 160, 145.35, 250, "Visit hours", 45);
 
 
             // draw big rectangle box on the bars and year text beneath
@@ -496,6 +453,99 @@ public class RequestHandler : DelegatingHandler
             graphics.DrawString(maxValue.ToString("F0"), labelFont, labelBrush, x + radius - 5, y + 20, sf);
         }
 
+    }
+
+    /// <summary>
+    /// Draws a vertical scale with grid lines
+    /// </summary>
+    /// <param name="graphics">Graphics object to draw on</param>
+    /// <param name="x0">Starting X position</param>
+    /// <param name="y0">Starting Y position</param>
+    /// <param name="width">Width of the chart area</param>
+    /// <param name="height">Height of the chart area</param>
+    /// <param name="maxValue">Maximum value for the scale</param>
+    /// <param name="steps">Number of scale divisions</param>
+    /// <param name="font">Font for scale labels</param>
+    /// <param name="brush">Brush for scale labels</param>
+    private void DrawVerticalScale(Graphics graphics, int x0, int y0, int width, int height, int maxValue, int steps, Font font, Brush brush)
+    {
+        for (int i = 0; i <= steps; i++)
+        {
+            int scaleValue = (maxValue * i) / steps;
+            int scaleY = y0 + height - (height * i / steps);
+            
+            // Draw scale line
+            using (var scalePen = new Pen(Color.FromArgb(200, 200, 200), 1))
+            {
+                scalePen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dot;
+                graphics.DrawLine(scalePen, x0 - 5, scaleY, x0 + width, scaleY);
+            }
+            
+            // Draw scale text
+            StringFormat sfRight = new StringFormat();
+            sfRight.Alignment = StringAlignment.Far;
+            graphics.DrawString(scaleValue.ToString(), font, brush, x0 - 8, scaleY - 6, sfRight);
+        }
+    }
+
+    /// <summary>
+    /// Draws a single bar with 3D effect, month label, and value text
+    /// </summary>
+    /// <param name="graphics">Graphics object to draw on</param>
+    /// <param name="x">X position of the bar</param>
+    /// <param name="y0">Base Y position</param>
+    /// <param name="barWidth">Width of the bar</param>
+    /// <param name="chartHeight">Total chart height</param>
+    /// <param name="barHeight">Height of this bar</param>
+    /// <param name="value">Value to display</param>
+    /// <param name="maxValue">Maximum value for scaling</param>
+    /// <param name="monthIndex">Month index (0-11)</param>
+    /// <param name="font">Font for text</param>
+    /// <param name="textBrush">Brush for text</param>
+    private void DrawBar(Graphics graphics, int x, int y0, int barWidth, int chartHeight, int barHeight, int value, int maxValue, int monthIndex, Font font, Brush textBrush)
+    {
+        RectangleF barRect = new RectangleF(x + 4, y0 + chartHeight - barHeight, barWidth - 8, barHeight);
+        
+        // Create gradient for 3D effect
+        using (var gradientBrush = new System.Drawing.Drawing2D.LinearGradientBrush(
+            barRect,
+            Color.FromArgb(255, 100, 150, 255), // Lighter blue
+            Color.FromArgb(255, 0, 0, 200),      // Darker blue
+            System.Drawing.Drawing2D.LinearGradientMode.Horizontal))
+        {
+            graphics.FillRectangle(gradientBrush, barRect);
+        }
+        
+        // Add highlight on left edge for 3D effect
+        using (var highlightPen = new Pen(Color.FromArgb(180, 150, 180, 255), 2))
+        {
+            graphics.DrawLine(highlightPen, x + 5, y0 + chartHeight - barHeight, x + 5, y0 + chartHeight);
+        }
+        
+        // Add shadow on right edge for 3D effect
+        using (var shadowPen = new Pen(Color.FromArgb(150, 0, 0, 100), 2))
+        {
+            graphics.DrawLine(shadowPen, x + barWidth - 5, y0 + chartHeight - barHeight, x + barWidth - 5, y0 + chartHeight);
+        }
+
+        // Draw month text
+        DateTime date = DateTime.Now;
+        date = new DateTime(date.Year, monthIndex + 1, date.Day);
+        string monthText = date.ToString("MMMM");
+        StringFormat sf = new StringFormat();
+        sf.Alignment = StringAlignment.Center;
+        Rectangle monthRect = new Rectangle(x, y0 + chartHeight + 5, barWidth, 30);
+        graphics.DrawString(monthText, font, textBrush, monthRect, sf);
+
+        // Draw y value text on top of bar (horizontally centered)
+        StringFormat sfTop = new StringFormat();
+        sfTop.Alignment = StringAlignment.Center;
+        sfTop.LineAlignment = StringAlignment.Far;
+        Rectangle topRect = new Rectangle(x, y0 + chartHeight - barHeight - 22, barWidth, 20);
+        using (var whiteBrush = new SolidBrush(Color.Blue))
+        {
+            graphics.DrawString(value.ToString(), font, whiteBrush, topRect, sfTop);
+        }
     }
 
    
