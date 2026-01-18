@@ -156,6 +156,10 @@
             users.forEach(function(user) {
                 select.append('<option value="' + user + '">' + user + '</option>');
             });
+            // Select first user by default
+            if (users.length > 0) {
+                select.val(users[0]);
+            }
         },
 
         showLoginModal: function() {

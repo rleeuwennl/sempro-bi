@@ -37,8 +37,8 @@ namespace SemproJira
 
             // Reduced list!!
             int l = list.Count;
-            list.RemoveRange(1000, l - 1000);
-            Console.WriteLine($"Using reduced list of {list.Count}   !!!!!!!!!!!!!!!!!!!!!!!!");
+            //list.RemoveRange(1000, l - 1000);
+            //Console.WriteLine($"Using reduced list of {list.Count}   !!!!!!!!!!!!!!!!!!!!!!!!");
 
             int countDown = list.Count;
             foreach (var issue in list)
