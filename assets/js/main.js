@@ -107,38 +107,44 @@
 				return;
 			}
 
-			// If this link opens a submenu (has a following UL), block navigation/click-through
-			if (link.nextElementSibling && link.nextElementSibling.tagName === 'UL') {
-				e.preventDefault();
-				e.stopPropagation();
-				e.stopImmediatePropagation();
-				return;
-			}
+		// Handle worklog-table.html as a full page load (not a fragment)
+		if (href === 'worklog-table.html' || href === '/worklog-table.html') {
+			// Let browser handle this as a normal navigation
+			return;
+		}
 
-			var frag = link.getAttribute('data-fragment');
-			if (!frag) {
-				// Only load fragments for links with explicit data-fragment attribute
-				// This prevents accidental loading of pages for submenu headers
-				return;
-			}
-
+		// If this link opens a submenu (has a following UL), block navigation/click-through
+		if (link.nextElementSibling && link.nextElementSibling.tagName === 'UL') {
 			e.preventDefault();
 			e.stopPropagation();
 			e.stopImmediatePropagation();
+			return;
+		}
 
-			loadFragment(frag);
+		var frag = link.getAttribute('data-fragment');
+		if (!frag) {
+			// Only load fragments for links with explicit data-fragment attribute
+			// This prevents accidental loading of pages for submenu headers
+			return;
+		}
 
-			$('body').removeClass('navPanel-visible');
-		}, true);
+		e.preventDefault();
+		e.stopPropagation();
+		e.stopImmediatePropagation();
 
-		window.addEventListener('popstate', function(e){
-			if (e.state && e.state.page) {
-				loadFragment(e.state.page, { silentHistory: true });
-			} else {
-				// Back to home: reload the page
-				window.location.reload();
-			}
-		});
+		loadFragment(frag);
+
+		$('body').removeClass('navPanel-visible');
+	}, true);
+
+	window.addEventListener('popstate', function(e){
+		if (e.state && e.state.page) {
+			loadFragment(e.state.page, { silentHistory: true });
+		} else {
+			// Back to home: reload the page
+			window.location.reload();
+		}
+	});
 
 		// On first load, if URL points to a fragment (path or ?frag=...), load it into #content
 		var initialFrag = detectInitialFragment();

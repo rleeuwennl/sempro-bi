@@ -32,6 +32,7 @@
 						<nav id="nav">
 							<ul>
 								<li><a href="index.html">Home</a></li>
+								<li><a href="javascript:void(0)" onclick="openWorklogTable()">Data Table</a></li>
 								<li><a href="javascript:void(0)" onclick="SimpleAuth.showLoginModal()">Login</a></li>
 						
 							</ul>
@@ -111,4 +112,23 @@
 		<script src="/assets/js/year-month-picker.js"></script>
 		<script src="/assets/js/hour-type-picker.js"></script>
 		<script src="/assets/js/graph-loader.js"></script>
+		<script>
+			function openWorklogTable() {
+				// Get current selections
+				var year = window.YearMonthPicker ? window.YearMonthPicker.getSelectedYear() : new Date().getFullYear();
+				var hourTypes = window.HourTypePicker ? window.HourTypePicker.getSelection().join(', ') : 'Mechanical hours, Software hours, Visit hours';
+				
+				// Get token if authenticated
+				var token = sessionStorage.getItem('pgad_token');
+				
+				// Build URL with parameters
+				var url = '/worklog-table.html?year=' + year + '&hourType=' + encodeURIComponent(hourTypes);
+				if (token) {
+					url += '&token=' + token;
+				}
+				
+				// Navigate to worklog table
+				window.location.href = url;
+			}
+		</script>
 </html>

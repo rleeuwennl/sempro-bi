@@ -7,6 +7,8 @@
         isAuthenticated: false,
         inactivityTimeout: 10 * 60 * 1000, // 10 minutes in milliseconds
         inactivityTimer: null,
+        usersCache: null, // Cache for users list
+        modalShown: false, // Flag to prevent repeated modal shows
 
         init: function() {
             this.token = sessionStorage.getItem('pgad_token');
@@ -20,8 +22,9 @@
             this.createLoginModal();
 
             // Show login modal on first visit if not authenticated
-            if (!this.isAuthenticated) {
+            if (!this.isAuthenticated && !this.modalShown) {
                 this.showLoginModal();
+                this.modalShown = true;
             }
 
             // Listen for Ctrl+Shift+L
@@ -102,26 +105,36 @@
         },
 
         loadUsers: function() {
+            // Return if users are already cached
+            if (this.usersCache) {
+                this.populateUserSelect(this.usersCache);
+                return;
+            }
+            
             $.ajax({
                 url: '/api/auth/users',
                 method: 'GET'
             })
             .done(function(users) {
-                var select = $('#pgad-user-select');
-                select.empty();
-                select.append('<option value="">-- Select a user --</option>');
-                users.forEach(function(user) {
-                    select.append('<option value="' + user + '">' + user + '</option>');
-                });
+                SimpleAuth.usersCache = users; // Cache the users
+                SimpleAuth.populateUserSelect(users);
             })
             .fail(function() {
                 $('#pgad-user-select').html('<option value="">Failed to load users</option>');
             });
         },
+        
+        populateUserSelect: function(users) {
+            var select = $('#pgad-user-select');
+            select.empty();
+            select.append('<option value="">-- Select a user --</option>');
+            users.forEach(function(user) {
+                select.append('<option value="' + user + '">' + user + '</option>');
+            });
+        },
 
         showLoginModal: function() {
             $('#pgad-login-modal').addClass('pgad-active');
-            this.loadUsers(); // Reload users when showing modal
             $('#pgad-password').focus();
         },
 
@@ -147,6 +160,10 @@
                     SimpleAuth.showAuthUI();
                     SimpleAuth.startInactivityTimer();
                     console.log('Authorized token: ' + SimpleAuth.token);
+                    
+                    // Trigger custom event for login success
+                    $(document).trigger('loginSuccess');
+                    
                     // Refresh the page after successful login
                     setTimeout(function() {
                         location.reload();

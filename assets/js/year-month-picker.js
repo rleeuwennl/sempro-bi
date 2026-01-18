@@ -3,6 +3,7 @@
     'use strict';
     
     let selectedYear = null;
+    let isInitializing = true;
     
     // Initialize on document ready
     $(document).ready(function() {
@@ -43,15 +44,18 @@
             triggerSelectionChange();
         });
         
-        // Trigger initial load
-        triggerSelectionChange();
+        // Mark initialization complete
+        isInitializing = false;
     }
     
     function triggerSelectionChange() {
         console.log('Selected year:', selectedYear);
         
-        // Trigger custom event for other components to listen to
-        $(document).trigger('yearSelectionChanged', [selectedYear]);
+        // Only trigger event if not initializing
+        if (!isInitializing) {
+            // Trigger custom event for other components to listen to
+            $(document).trigger('yearSelectionChanged', [selectedYear]);
+        }
         
         // If liturgie-loader exists, trigger a reload
         if (window.LiturgieLoader && typeof window.LiturgieLoader.loadData === 'function') {

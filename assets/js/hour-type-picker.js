@@ -10,6 +10,7 @@
     
     // Store selection state
     const selectionState = {};
+    let isInitializing = true;
     
     // Initialize on document ready
     $(document).ready(function() {
@@ -24,6 +25,9 @@
         
         renderHourTypes();
         setupToggle();
+        
+        // Mark initialization complete
+        isInitializing = false;
     }
     
     function setupToggle() {
@@ -79,9 +83,15 @@
         const selected = getSelectedHourTypes();
         console.log('Selected hour types:', selected);
         
-        // Trigger graph update
-        if (window.GraphLoader && typeof window.GraphLoader.update === 'function') {
-            window.GraphLoader.update();
+        // Only trigger updates if not initializing
+        if (!isInitializing) {
+            // Trigger custom event
+            $(document).trigger('hourTypeSelectionChanged', [selected]);
+            
+            // Trigger graph update
+            if (window.GraphLoader && typeof window.GraphLoader.update === 'function') {
+                window.GraphLoader.update();
+            }
         }
     }
     
