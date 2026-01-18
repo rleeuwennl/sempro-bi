@@ -22,6 +22,14 @@
         // Update image src
         const img = document.querySelector('#content img[src*="retrieve/graph"]');
         if (img) {
+            // Add error handler for 401/403 responses
+            img.onerror = function() {
+                console.log('Graph image failed to load - likely 401 Unauthorized');
+                if (window.SimpleAuth) {
+                    SimpleAuth.handleUnauthorized();
+                }
+            };
+            
             img.src = url + '&_=' + new Date().getTime(); // Add timestamp to prevent caching
             console.log(`Graph updated for user - Year: ${year}, Hour Type: ${hourType}`);
         }

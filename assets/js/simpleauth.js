@@ -43,6 +43,31 @@
                     SimpleAuth.resetInactivityTimer();
                 }
             });
+
+            // Global AJAX error handler for 401 Unauthorized
+            $(document).ajaxError(function(event, jqxhr, settings, thrownError) {
+                if (jqxhr.status === 401) {
+                    console.log('Received 401 Unauthorized - auto logout');
+                    SimpleAuth.handleUnauthorized();
+                }
+            });
+        },
+
+        handleUnauthorized: function() {
+            // Clear authentication state
+            this.token = null;
+            this.isAuthenticated = false;
+            sessionStorage.removeItem('pgad_token');
+            this.hideAuthUI();
+            
+            // Stop inactivity timer
+            if (this.inactivityTimer) {
+                clearTimeout(this.inactivityTimer);
+                this.inactivityTimer = null;
+            }
+            
+            // Show login modal
+            this.showLoginModal();
         },
 
         startInactivityTimer: function() {

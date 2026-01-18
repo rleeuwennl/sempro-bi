@@ -48,7 +48,7 @@
 								<!-- Content -->
 								<div id="content">
 									<a class="image">
-										<img src="/api/retrieve/graph" alt="" />
+										<img src="/api/retrieve/graph" alt="" onerror="if(window.SimpleAuth && !window.SimpleAuth.isAuthenticated) { SimpleAuth.handleUnauthorized(); }" />
 									</a>
 									<p>"Please login"</p>
 								</div>
@@ -127,8 +127,22 @@
 					url += '&token=' + token;
 				}
 				
-				// Navigate to worklog table
-				window.location.href = url;
+				// Fetch the partial HTML and update the content area
+				$.ajax({
+					url: url,
+					method: 'GET',
+					headers: token ? { 'X-Auth-Token': token } : {},
+					success: function(html) {
+						$('#content').html(html);
+					},
+					error: function(xhr) {
+						if (xhr.status === 401) {
+							SimpleAuth.handleUnauthorized();
+						} else {
+							$('#content').html('<p style="color: red; padding: 40px; text-align: center;">Error loading worklog data.</p>');
+						}
+					}
+				});
 			}
 		</script>
 </html>

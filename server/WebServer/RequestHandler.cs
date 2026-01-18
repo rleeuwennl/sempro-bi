@@ -301,73 +301,13 @@ public class RequestHandler : DelegatingHandler
     private Task<HttpResponseMessage> GenerateWorklogTableLoginPrompt()
     {
         var html = new System.Text.StringBuilder();
-        html.AppendLine("<!DOCTYPE HTML>");
-        html.AppendLine("<html>");
-        html.AppendLine("<head>");
-        html.AppendLine("    <title>Sempro Technologies - Worklog Data</title>");
-        html.AppendLine("    <meta charset='utf-8' />");
-        html.AppendLine("    <meta name='viewport' content='width=device-width, initial-scale=1, user-scalable=no' />");
-        html.AppendLine("    <link rel='stylesheet' href='/assets/css/main.css' />");
-        html.AppendLine("    <link rel='stylesheet' href='/assets/css/auth-modal.css' />");
-        html.AppendLine("    <link rel='icon' type='image/png' sizes='32x32' href='/images/favicon-32x32.png'>");
-        html.AppendLine("    <script src='/assets/js/jquery.min.js'></script>");
-        html.AppendLine("    <script src='/assets/js/simpleauth.js'></script>");
-        html.AppendLine("    <style>");
-        html.AppendLine("        .login-prompt { text-align: center; padding: 100px 20px; }");
-        html.AppendLine("        .login-prompt h2 { color: #2c5282; margin-bottom: 20px; }");
-        html.AppendLine("        .login-prompt p { font-size: 18px; color: #666; margin-bottom: 30px; }");
-        html.AppendLine("        .login-btn { background: #2c5282; color: white; padding: 15px 40px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; }");
-        html.AppendLine("        .login-btn:hover { background: #1e3a5f; }");
-        html.AppendLine("    </style>");
-        html.AppendLine("    <script>");
-        html.AppendLine("        $(document).ready(function() {");
-        html.AppendLine("            // Get current URL parameters");
-        html.AppendLine("            var urlParams = new URLSearchParams(window.location.search);");
-        html.AppendLine("            var year = urlParams.get('year') || new Date().getFullYear();");
-        html.AppendLine("            var hourType = urlParams.get('hourType') || 'Mechanical hours, Software hours, Visit hours';");
-        html.AppendLine("            ");
-        html.AppendLine("            // Check if already logged in");
-        html.AppendLine("            var token = sessionStorage.getItem('pgad_token');");
-        html.AppendLine("            if (token) {");
-        html.AppendLine("                // Reload with token and preserve parameters");
-        html.AppendLine("                window.location.href = '/worklog-table.html?token=' + token + '&year=' + year + '&hourType=' + encodeURIComponent(hourType);");
-        html.AppendLine("            }");
-        html.AppendLine("            ");
-        html.AppendLine("            // Listen for successful login");
-        html.AppendLine("            $(document).on('loginSuccess', function() {");
-        html.AppendLine("                var token = sessionStorage.getItem('pgad_token');");
-        html.AppendLine("                if (token) {");
-        html.AppendLine("                    window.location.href = '/worklog-table.html?token=' + token + '&year=' + year + '&hourType=' + encodeURIComponent(hourType);");
-        html.AppendLine("                }");
-        html.AppendLine("            });");
-        html.AppendLine("        });");
-        html.AppendLine("        ");
-        html.AppendLine("        function showLogin() {");
-        html.AppendLine("            if (window.SimpleAuth) {");
-        html.AppendLine("                SimpleAuth.showLoginModal();");
-        html.AppendLine("            }");
-        html.AppendLine("        }");
-        html.AppendLine("    </script>");
-        html.AppendLine("</head>");
-        html.AppendLine("<body>");
-        html.AppendLine("<div id='page-wrapper'>");
-        html.AppendLine("    <section id='header' class='wrapper'>");
-        html.AppendLine("        <div id='logo'>");
-        html.AppendLine("            <h1><a href='/'>Sempro Technologies</a></h1>");
-        html.AppendLine("        </div>");
-        html.AppendLine("    </section>");
-        html.AppendLine("    <section id='main' class='wrapper style2'>");
-        html.AppendLine("        <div class='container'>");
-        html.AppendLine("            <div class='login-prompt'>");
-        html.AppendLine("                <h2>Authentication Required</h2>");
-        html.AppendLine("                <p>Please log in to view the worklog data table.</p>");
-        html.AppendLine("                <button class='login-btn' onclick='showLogin()'>Login</button>");
-        html.AppendLine("            </div>");
-        html.AppendLine("        </div>");
-        html.AppendLine("    </section>");
+        html.AppendLine("<div class='worklog-data-content' style='background: white; padding: 20px; min-height: 600px;'>");
+        html.AppendLine("    <div class='login-prompt' style='text-align: center; padding: 100px 20px;'>");
+        html.AppendLine("        <h2 style='color: #2c5282; margin-bottom: 20px;'>Authentication Required</h2>");
+        html.AppendLine("        <p style='font-size: 18px; color: #666; margin-bottom: 30px;'>Please log in to view the worklog data table.</p>");
+        html.AppendLine("        <button class='login-btn' onclick='SimpleAuth.showLoginModal()' style='background: #2c5282; color: white; padding: 15px 40px; border: none; border-radius: 5px; font-size: 16px; cursor: pointer;'>Login</button>");
+        html.AppendLine("    </div>");
         html.AppendLine("</div>");
-        html.AppendLine("</body>");
-        html.AppendLine("</html>");
 
         var response = new HttpResponseMessage();
         response.Content = new StringContent(html.ToString());
@@ -402,98 +342,66 @@ public class RequestHandler : DelegatingHandler
             // Calculate totals
             double totalHours = filteredRecords.Sum(w => w.TimeSpent);
 
-            // Generate HTML
+            // Generate partial HTML (just the content, no full page structure)
             var html = new System.Text.StringBuilder();
-            html.AppendLine("<!DOCTYPE HTML>");
-            html.AppendLine("<html>");
-            html.AppendLine("<head>");
-            html.AppendLine($"    <title>Sempro Technologies - Worklog Data for {selectUsername}</title>");
-            html.AppendLine("    <meta charset='utf-8' />");
-            html.AppendLine("    <meta name='viewport' content='width=device-width, initial-scale=1, user-scalable=no' />");
-            html.AppendLine("    <link rel='stylesheet' href='/assets/css/main.css' />");
-            html.AppendLine("    <link rel='icon' type='image/png' sizes='32x32' href='/images/favicon-32x32.png'>");
-            html.AppendLine("    <style>");
-            html.AppendLine("        .worklog-table-container { width: 100%; overflow-x: auto; margin-top: 20px; padding: 20px; }");
-            html.AppendLine("        .worklog-table { width: 100%; border-collapse: collapse; background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }");
-            html.AppendLine("        .worklog-table th, .worklog-table td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; font-size: 14px; }");
-            html.AppendLine("        .worklog-table th { background-color: #2c5282; color: white; font-weight: bold; position: sticky; top: 0; z-index: 10; }");
-            html.AppendLine("        .worklog-table tr:hover { background-color: #f5f5f5; }");
-            html.AppendLine("        .worklog-table tr:nth-child(even) { background-color: #f9f9f9; }");
-            html.AppendLine("        .total-row { font-weight: bold; background-color: #e2e8f0 !important; font-size: 16px; }");
-            html.AppendLine("        .info-section { padding: 20px; background: #f0f0f0; margin-bottom: 20px; }");
-            html.AppendLine("        .info-section h2 { margin-top: 0; color: #2c5282; }");
-            html.AppendLine("    </style>");
-            html.AppendLine("</head>");
-            html.AppendLine("<body>");
-            html.AppendLine("<div id='page-wrapper'>");
-            html.AppendLine("    <section id='header' class='wrapper'>");
-            html.AppendLine("        <div id='logo'>");
-            html.AppendLine("            <h1><a href='/'>Sempro Technologies</a></h1>");
-            html.AppendLine("        </div>");
-            html.AppendLine("    </section>");
-            html.AppendLine("    <section id='main' class='wrapper style2'>");
-            html.AppendLine("        <div class='container'>");
-            html.AppendLine("            <div class='info-section'>");
-            html.AppendLine($"                <h2>Worklog Data Table - {selectUsername}</h2>");
-            html.AppendLine($"                <p><strong>Year:</strong> {year} | <strong>Hour Types:</strong> {selectedHourType}</p>");
-            html.AppendLine($"                <p><strong>Total Records:</strong> {filteredRecords.Count} | <strong>Total Hours:</strong> {totalHours:F2}</p>");
-            html.AppendLine("            </div>");
-            html.AppendLine("            <div class='worklog-table-container'>");
+            html.AppendLine("<div class='worklog-data-content' style='background: white; padding: 20px; min-height: 600px;'>");
+            html.AppendLine("    <div class='info-section' style='padding: 20px; background: #f0f0f0; margin-bottom: 20px;'>");
+            html.AppendLine($"        <h2 style='margin-top: 0; color: #2c5282;'>Worklog Data Table - {selectUsername}</h2>");
+            html.AppendLine($"        <p><strong>Year:</strong> {year} | <strong>Hour Types:</strong> {selectedHourType}</p>");
+            html.AppendLine($"        <p><strong>Total Records:</strong> {filteredRecords.Count} | <strong>Total Hours:</strong> {totalHours:F2}</p>");
+            html.AppendLine("    </div>");
+            html.AppendLine("    <div class='worklog-table-container' style='width: 100%; overflow-x: auto; margin-top: 20px;'>");
             
             if (filteredRecords.Count == 0)
             {
-                html.AppendLine("                <p style='text-align: center; padding: 40px; font-size: 18px; color: #666;'>No worklog records found for the selected criteria.</p>");
+                html.AppendLine("        <p style='text-align: center; padding: 40px; font-size: 18px; color: #666;'>No worklog records found for the selected criteria.</p>");
             }
             else
             {
-                html.AppendLine("                <table class='worklog-table'>");
-                html.AppendLine("                    <thead>");
-                html.AppendLine("                        <tr>");
-                html.AppendLine("                            <th>Date</th>");
-                html.AppendLine("                            <th>Issue Key</th>");
-                html.AppendLine("                            <th>Linked Issue</th>");
-                html.AppendLine("                            <th>Author</th>");
-                html.AppendLine("                            <th>Hour Type</th>");
-                html.AppendLine("                            <th>Hours</th>");
-                html.AppendLine("                            <th>Classification</th>");
-                html.AppendLine("                            <th>Type</th>");
-                html.AppendLine("                            <th>Comment</th>");
-                html.AppendLine("                        </tr>");
-                html.AppendLine("                    </thead>");
-                html.AppendLine("                    <tbody>");
+                html.AppendLine("        <table class='worklog-table' style='width: 100%; border-collapse: collapse; background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1);'>");
+                html.AppendLine("            <thead>");
+                html.AppendLine("                <tr>");
+                html.AppendLine("                    <th style='padding: 12px; text-align: left; border-bottom: 1px solid #ddd; background-color: #2c5282; color: white; font-weight: bold;'>Date</th>");
+                html.AppendLine("                    <th style='padding: 12px; text-align: left; border-bottom: 1px solid #ddd; background-color: #2c5282; color: white; font-weight: bold;'>Issue Key</th>");
+                html.AppendLine("                    <th style='padding: 12px; text-align: left; border-bottom: 1px solid #ddd; background-color: #2c5282; color: white; font-weight: bold;'>Linked Issue</th>");
+                html.AppendLine("                    <th style='padding: 12px; text-align: left; border-bottom: 1px solid #ddd; background-color: #2c5282; color: white; font-weight: bold;'>Author</th>");
+                html.AppendLine("                    <th style='padding: 12px; text-align: left; border-bottom: 1px solid #ddd; background-color: #2c5282; color: white; font-weight: bold;'>Hour Type</th>");
+                html.AppendLine("                    <th style='padding: 12px; text-align: left; border-bottom: 1px solid #ddd; background-color: #2c5282; color: white; font-weight: bold;'>Hours</th>");
+                html.AppendLine("                    <th style='padding: 12px; text-align: left; border-bottom: 1px solid #ddd; background-color: #2c5282; color: white; font-weight: bold;'>Classification</th>");
+                html.AppendLine("                    <th style='padding: 12px; text-align: left; border-bottom: 1px solid #ddd; background-color: #2c5282; color: white; font-weight: bold;'>Type</th>");
+                html.AppendLine("                    <th style='padding: 12px; text-align: left; border-bottom: 1px solid #ddd; background-color: #2c5282; color: white; font-weight: bold;'>Comment</th>");
+                html.AppendLine("                </tr>");
+                html.AppendLine("            </thead>");
+                html.AppendLine("            <tbody>");
                 
                 foreach (var record in filteredRecords)
                 {
-                    html.AppendLine("                        <tr>");
-                    html.AppendLine($"                            <td>{record.WorkLogDate:yyyy-MM-dd}</td>");
-                    html.AppendLine($"                            <td>{System.Net.WebUtility.HtmlEncode(record.IssueKey)}</td>");
-                    html.AppendLine($"                            <td>{System.Net.WebUtility.HtmlEncode(record.LinkedIssueKey)}</td>");
-                    html.AppendLine($"                            <td>{System.Net.WebUtility.HtmlEncode(record.Author)}</td>");
-                    html.AppendLine($"                            <td>{System.Net.WebUtility.HtmlEncode(record.HourType)}</td>");
-                    html.AppendLine($"                            <td>{record.TimeSpent:F2}</td>");
-                    html.AppendLine($"                            <td>{System.Net.WebUtility.HtmlEncode(record.Classification)}</td>");
-                    html.AppendLine($"                            <td>{System.Net.WebUtility.HtmlEncode(record.TypeOfTicket)}</td>");
-                    html.AppendLine($"                            <td>{System.Net.WebUtility.HtmlEncode(record.Comment ?? "")}</td>");
-                    html.AppendLine("                        </tr>");
+                    html.AppendLine("                <tr style='border-bottom: 1px solid #ddd;'>");
+                    html.AppendLine($"                    <td style='padding: 12px;'>{record.WorkLogDate:yyyy-MM-dd}</td>");
+                    html.AppendLine($"                    <td style='padding: 12px;'>{System.Net.WebUtility.HtmlEncode(record.IssueKey)}</td>");
+                    html.AppendLine($"                    <td style='padding: 12px;'>{System.Net.WebUtility.HtmlEncode(record.LinkedIssueKey)}</td>");
+                    html.AppendLine($"                    <td style='padding: 12px;'>{System.Net.WebUtility.HtmlEncode(record.Author)}</td>");
+                    html.AppendLine($"                    <td style='padding: 12px;'>{System.Net.WebUtility.HtmlEncode(record.HourType)}</td>");
+                    html.AppendLine($"                    <td style='padding: 12px;'>{record.TimeSpent:F2}</td>");
+                    html.AppendLine($"                    <td style='padding: 12px;'>{System.Net.WebUtility.HtmlEncode(record.Classification)}</td>");
+                    html.AppendLine($"                    <td style='padding: 12px;'>{System.Net.WebUtility.HtmlEncode(record.TypeOfTicket)}</td>");
+                    html.AppendLine($"                    <td style='padding: 12px;'>{System.Net.WebUtility.HtmlEncode(record.Comment ?? "")}</td>");
+                    html.AppendLine("                </tr>");
                 }
                 
                 // Add total row
-                html.AppendLine("                        <tr class='total-row'>");
-                html.AppendLine("                            <td colspan='5' style='text-align: right;'><strong>TOTAL:</strong></td>");
-                html.AppendLine($"                            <td><strong>{totalHours:F2}</strong></td>");
-                html.AppendLine("                            <td colspan='3'></td>");
-                html.AppendLine("                        </tr>");
+                html.AppendLine("                <tr style='font-weight: bold; background-color: #e2e8f0;'>");
+                html.AppendLine("                    <td colspan='5' style='text-align: right; padding: 12px;'><strong>TOTAL:</strong></td>");
+                html.AppendLine($"                    <td style='padding: 12px;'><strong>{totalHours:F2}</strong></td>");
+                html.AppendLine("                    <td colspan='3' style='padding: 12px;'></td>");
+                html.AppendLine("                </tr>");
                 
-                html.AppendLine("                    </tbody>");
-                html.AppendLine("                </table>");
+                html.AppendLine("            </tbody>");
+                html.AppendLine("        </table>");
             }
             
-            html.AppendLine("            </div>");
-            html.AppendLine("        </div>");
-            html.AppendLine("    </section>");
+            html.AppendLine("    </div>");
             html.AppendLine("</div>");
-            html.AppendLine("</body>");
-            html.AppendLine("</html>");
 
             var response = new HttpResponseMessage();
             response.Content = new StringContent(html.ToString());
@@ -780,6 +688,29 @@ public class RequestHandler : DelegatingHandler
                 }
 
                 string username = GetUsernameFromToken(request);
+                
+                // Auto-logout if username is empty
+                if (string.IsNullOrEmpty(username))
+                {
+                    Console.WriteLine("Username is empty - invalidating token");
+                    // Remove token from dictionary
+                    string token = null;
+                    IEnumerable<string> authHeaders;
+                    if (request.Headers.TryGetValues("X-Auth-Token", out authHeaders))
+                    {
+                        token = authHeaders.FirstOrDefault();
+                    }
+                    if (string.IsNullOrEmpty(token))
+                    {
+                        token = request.RequestUri.ParseQueryString()["token"];
+                    }
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        tokenToUsername.Remove(token);
+                    }
+                    return Task.FromResult(new HttpResponseMessage(HttpStatusCode.Unauthorized));
+                }
+                
                 string year = request.RequestUri.ParseQueryString()["year"] ?? "unknown";
                 string hourType = request.RequestUri.ParseQueryString()["hourType"] ?? "unknown";
                 
@@ -801,6 +732,29 @@ public class RequestHandler : DelegatingHandler
 
                 Console.WriteLine("User authorized - generating table");
                 string username = GetUsernameFromToken(request);
+                
+                // Auto-logout if username is empty
+                if (string.IsNullOrEmpty(username))
+                {
+                    Console.WriteLine("Username is empty - invalidating token and showing login");
+                    // Remove token from dictionary
+                    string token = null;
+                    IEnumerable<string> authHeaders;
+                    if (request.Headers.TryGetValues("X-Auth-Token", out authHeaders))
+                    {
+                        token = authHeaders.FirstOrDefault();
+                    }
+                    if (string.IsNullOrEmpty(token))
+                    {
+                        token = request.RequestUri.ParseQueryString()["token"];
+                    }
+                    if (!string.IsNullOrEmpty(token))
+                    {
+                        tokenToUsername.Remove(token);
+                    }
+                    return GenerateWorklogTableLoginPrompt();
+                }
+                
                 string year = request.RequestUri.ParseQueryString()["year"] ?? DateTime.Now.Year.ToString();
                 string hourType = request.RequestUri.ParseQueryString()["hourType"] ?? "Mechanical hours, Software hours, Visit hours";
                 
