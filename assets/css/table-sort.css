@@ -1,0 +1,57 @@
+/* Table Sorting Styles */
+
+/* Sortable column headers */
+.worklog-table th.sortable:hover {
+    background-color: #1e3a5f !important;
+    transition: background-color 0.2s ease;
+}
+
+.worklog-table th.sortable {
+    position: relative;
+    transition: background-color 0.2s ease;
+}
+
+/* Sort arrow styling */
+.worklog-table th.sortable .sort-arrow {
+    display: inline-block;
+    margin-left: 5px;
+    font-size: 0.8em;
+    color: white;
+    opacity: 0.3;
+    transition: opacity 0.2s ease;
+}
+
+/* Active sort column arrow */
+.worklog-table th.sortable.active .sort-arrow {
+    opacity: 1;
+}
+
+/* Hover effect for sort arrows */
+.worklog-table th.sortable:hover .sort-arrow {
+    opacity: 0.7;
+}
+
+/* Table row hover effect */
+.worklog-table tbody tr:not(:last-child):hover {
+    background-color: #f5f5f5 !important;
+    transition: background-color 0.2s ease;
+}
+
+/* Zebra striping for better readability */
+.worklog-table tbody tr:nth-child(even):not(:last-child) {
+    background-color: #fafafa;
+}
+
+.worklog-table tbody tr:nth-child(odd):not(:last-child) {
+    background-color: white;
+}
+
+/* Total row styling (always last row) */
+.worklog-table tbody tr:last-child {
+    background-color: #e2e8f0 !important;
+    font-weight: bold;
+}
+
+.worklog-table tbody tr:last-child:hover {
+    background-color: #e2e8f0 !important;
+}

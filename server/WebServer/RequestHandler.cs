@@ -358,18 +358,18 @@ public class RequestHandler : DelegatingHandler
             }
             else
             {
-                html.AppendLine("        <table class='worklog-table' style='width: 100%; border-collapse: collapse; background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1);'>");
+                html.AppendLine("        <table class='worklog-table' id='worklogTable' style='width: 100%; border-collapse: collapse; background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1);'>");
                 html.AppendLine("            <thead>");
                 html.AppendLine("                <tr>");
-                html.AppendLine("                    <th style='padding: 12px; text-align: left; border-bottom: 1px solid #ddd; background-color: #2c5282; color: white; font-weight: bold;'>Date</th>");
-                html.AppendLine("                    <th style='padding: 12px; text-align: left; border-bottom: 1px solid #ddd; background-color: #2c5282; color: white; font-weight: bold;'>Issue Key</th>");
-                html.AppendLine("                    <th style='padding: 12px; text-align: left; border-bottom: 1px solid #ddd; background-color: #2c5282; color: white; font-weight: bold;'>Linked Issue</th>");
-                html.AppendLine("                    <th style='padding: 12px; text-align: left; border-bottom: 1px solid #ddd; background-color: #2c5282; color: white; font-weight: bold;'>Author</th>");
-                html.AppendLine("                    <th style='padding: 12px; text-align: left; border-bottom: 1px solid #ddd; background-color: #2c5282; color: white; font-weight: bold;'>Hour Type</th>");
-                html.AppendLine("                    <th style='padding: 12px; text-align: left; border-bottom: 1px solid #ddd; background-color: #2c5282; color: white; font-weight: bold;'>Hours</th>");
-                html.AppendLine("                    <th style='padding: 12px; text-align: left; border-bottom: 1px solid #ddd; background-color: #2c5282; color: white; font-weight: bold;'>Classification</th>");
-                html.AppendLine("                    <th style='padding: 12px; text-align: left; border-bottom: 1px solid #ddd; background-color: #2c5282; color: white; font-weight: bold;'>Type</th>");
-                html.AppendLine("                    <th style='padding: 12px; text-align: left; border-bottom: 1px solid #ddd; background-color: #2c5282; color: white; font-weight: bold;'>Comment</th>");
+                html.AppendLine("                    <th class='sortable' data-column='date' style='padding: 12px; text-align: left; border-bottom: 1px solid #ddd; background-color: #2c5282; color: white; font-weight: bold; cursor: pointer; user-select: none;'>Date <span class='sort-arrow'></span></th>");
+                html.AppendLine("                    <th class='sortable' data-column='issuekey' style='padding: 12px; text-align: left; border-bottom: 1px solid #ddd; background-color: #2c5282; color: white; font-weight: bold; cursor: pointer; user-select: none;'>Issue Key <span class='sort-arrow'></span></th>");
+                html.AppendLine("                    <th class='sortable' data-column='linkedissue' style='padding: 12px; text-align: left; border-bottom: 1px solid #ddd; background-color: #2c5282; color: white; font-weight: bold; cursor: pointer; user-select: none;'>Linked Issue <span class='sort-arrow'></span></th>");
+                html.AppendLine("                    <th class='sortable' data-column='author' style='padding: 12px; text-align: left; border-bottom: 1px solid #ddd; background-color: #2c5282; color: white; font-weight: bold; cursor: pointer; user-select: none;'>Author <span class='sort-arrow'></span></th>");
+                html.AppendLine("                    <th class='sortable' data-column='hourtype' style='padding: 12px; text-align: left; border-bottom: 1px solid #ddd; background-color: #2c5282; color: white; font-weight: bold; cursor: pointer; user-select: none;'>Hour Type <span class='sort-arrow'></span></th>");
+                html.AppendLine("                    <th class='sortable' data-column='hours' data-type='number' style='padding: 12px; text-align: left; border-bottom: 1px solid #ddd; background-color: #2c5282; color: white; font-weight: bold; cursor: pointer; user-select: none;'>Hours <span class='sort-arrow'></span></th>");
+                html.AppendLine("                    <th class='sortable' data-column='classification' style='padding: 12px; text-align: left; border-bottom: 1px solid #ddd; background-color: #2c5282; color: white; font-weight: bold; cursor: pointer; user-select: none;'>Classification <span class='sort-arrow'></span></th>");
+                html.AppendLine("                    <th class='sortable' data-column='type' style='padding: 12px; text-align: left; border-bottom: 1px solid #ddd; background-color: #2c5282; color: white; font-weight: bold; cursor: pointer; user-select: none;'>Type <span class='sort-arrow'></span></th>");
+                html.AppendLine("                    <th class='sortable' data-column='comment' style='padding: 12px; text-align: left; border-bottom: 1px solid #ddd; background-color: #2c5282; color: white; font-weight: bold; cursor: pointer; user-select: none;'>Comment <span class='sort-arrow'></span></th>");
                 html.AppendLine("                </tr>");
                 html.AppendLine("            </thead>");
                 html.AppendLine("            <tbody>");
